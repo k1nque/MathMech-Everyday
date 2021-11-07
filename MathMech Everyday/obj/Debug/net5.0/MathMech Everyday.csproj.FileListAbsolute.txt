@@ -1,0 +1,16 @@
+D:\MathMech-Everyday\MathMech Everyday\bin\Debug\net5.0\MathMech Everyday.exe
+D:\MathMech-Everyday\MathMech Everyday\bin\Debug\net5.0\MathMech Everyday.deps.json
+D:\MathMech-Everyday\MathMech Everyday\bin\Debug\net5.0\MathMech Everyday.runtimeconfig.json
+D:\MathMech-Everyday\MathMech Everyday\bin\Debug\net5.0\MathMech Everyday.runtimeconfig.dev.json
+D:\MathMech-Everyday\MathMech Everyday\bin\Debug\net5.0\MathMech Everyday.dll
+D:\MathMech-Everyday\MathMech Everyday\bin\Debug\net5.0\ref\MathMech Everyday.dll
+D:\MathMech-Everyday\MathMech Everyday\bin\Debug\net5.0\MathMech Everyday.pdb
+D:\MathMech-Everyday\MathMech Everyday\obj\Debug\net5.0\MathMech Everyday.csprojAssemblyReference.cache
+D:\MathMech-Everyday\MathMech Everyday\obj\Debug\net5.0\MathMech Everyday.GeneratedMSBuildEditorConfig.editorconfig
+D:\MathMech-Everyday\MathMech Everyday\obj\Debug\net5.0\MathMech Everyday.AssemblyInfoInputs.cache
+D:\MathMech-Everyday\MathMech Everyday\obj\Debug\net5.0\MathMech Everyday.AssemblyInfo.cs
+D:\MathMech-Everyday\MathMech Everyday\obj\Debug\net5.0\MathMech Everyday.csproj.CoreCompileInputs.cache
+D:\MathMech-Everyday\MathMech Everyday\obj\Debug\net5.0\MathMech Everyday.dll
+D:\MathMech-Everyday\MathMech Everyday\obj\Debug\net5.0\ref\MathMech Everyday.dll
+D:\MathMech-Everyday\MathMech Everyday\obj\Debug\net5.0\MathMech Everyday.pdb
+D:\MathMech-Everyday\MathMech Everyday\obj\Debug\net5.0\MathMech Everyday.genruntimeconfig.cache
