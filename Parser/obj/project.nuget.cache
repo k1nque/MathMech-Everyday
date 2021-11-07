@@ -1,8 +1,12 @@
 {
   "version": 2,
-  "dgSpecHash": "CiPzFeOl5qctzrzfdkb6ZZc7XO7pItkYBZyencKieDP/mItjVCjuuqcJkT65FihVLIWnQ9cRcrAh/GuKJfFdQg==",
+  "dgSpecHash": "Gl36VNO1AKdOL9Ti1rRXPUXK7VfKbkcTqwy5nD97Aq9/E4fj5rEtxub41ks1wcRDAQ3jw/0hvJafpME2gUsb+A==",
   "success": true,
   "projectFilePath": "D:\\MathMech-Everyday\\Parser\\Parser.csproj",
-  "expectedPackageFiles": [],
+  "expectedPackageFiles": [
+    "C:\\Users\\k1nqPC\\.nuget\\packages\\ical.net\\4.2.0\\ical.net.4.2.0.nupkg.sha512",
+    "C:\\Users\\k1nqPC\\.nuget\\packages\\nodatime\\3.0.0\\nodatime.3.0.0.nupkg.sha512",
+    "C:\\Users\\k1nqPC\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.7.1\\system.runtime.compilerservices.unsafe.4.7.1.nupkg.sha512"
+  ],
   "logs": []
 }
