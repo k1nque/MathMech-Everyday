@@ -104,19 +104,19 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\k1nqPC\\.nuget\\packages\\": {}
+    "C:\\Users\\kibak\\.nuget\\packages\\": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\MathMech-Everyday\\Parser\\Parser.csproj",
+      "projectUniqueName": "D:\\Projects\\MathMech-Everyday\\Parser\\Parser.csproj",
       "projectName": "Parser",
-      "projectPath": "D:\\MathMech-Everyday\\Parser\\Parser.csproj",
-      "packagesPath": "C:\\Users\\k1nqPC\\.nuget\\packages\\",
-      "outputPath": "D:\\MathMech-Everyday\\Parser\\obj\\",
+      "projectPath": "D:\\Projects\\MathMech-Everyday\\Parser\\Parser.csproj",
+      "packagesPath": "C:\\Users\\kibak\\.nuget\\packages\\",
+      "outputPath": "D:\\Projects\\MathMech-Everyday\\Parser\\obj\\",
       "projectStyle": "PackageReference",
       "configFilePaths": [
-        "C:\\Users\\k1nqPC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\kibak\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -162,7 +162,7 @@
             "privateAssets": "all"
           }
         },
-        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.200\\RuntimeIdentifierGraph.json"
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.202\\RuntimeIdentifierGraph.json"
       }
     }
   }
