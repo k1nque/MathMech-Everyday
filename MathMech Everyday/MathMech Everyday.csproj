@@ -6,4 +6,8 @@
     <RootNamespace>MathMech_Everyday</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\Parser\Parser.csproj" />
+  </ItemGroup>
+
 </Project>
