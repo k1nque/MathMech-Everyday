@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 
 namespace MathMech_Everyday
 {
@@ -6,6 +7,7 @@ namespace MathMech_Everyday
     {
         static void Main(string[] args)
         {
-            
+
         }
+    }
 }

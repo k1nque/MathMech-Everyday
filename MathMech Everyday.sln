@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31205.134
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathMech Everyday", "MathMech Everyday\MathMech Everyday.csproj", "{EB616C72-DCD6-446A-BC72-5334642CE2AD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathMech Everyday", "MathMech Everyday\MathMech Everyday.csproj", "{EB616C72-DCD6-446A-BC72-5334642CE2AD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parser", "Parser\Parser.csproj", "{4959D44D-5770-476C-9A3E-DDAE7A84AD25}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TelegramBot", "TelegramBot\TelegramBot.csproj", "{4A026D84-85B0-4DE6-83D3-522D020ECBD9}"
 EndProject
@@ -21,6 +23,10 @@ Global
 		{4A026D84-85B0-4DE6-83D3-522D020ECBD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4A026D84-85B0-4DE6-83D3-522D020ECBD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4A026D84-85B0-4DE6-83D3-522D020ECBD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4959D44D-5770-476C-9A3E-DDAE7A84AD25}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4959D44D-5770-476C-9A3E-DDAE7A84AD25}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4959D44D-5770-476C-9A3E-DDAE7A84AD25}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4959D44D-5770-476C-9A3E-DDAE7A84AD25}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
