@@ -6,7 +6,6 @@ namespace MathMech_Everyday
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            
         }
-    }
 }
