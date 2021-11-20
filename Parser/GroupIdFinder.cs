@@ -1,5 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.Json;
@@ -19,21 +18,17 @@ namespace Parser
             public string title { get; set; }
         }
         
-        private static string GetJson(string institute, string course)
-        {
-            using var client = new WebClient();
-            var jsonUrl = $"https://urfu.ru/api/schedule/groups/{institute}/{course}/";
-            return client.DownloadString(jsonUrl);
-        }
+        private static string GetJson() =>
+            new WebClient().DownloadString("https://urfu.ru/api/schedule/groups/");
 
         private static List<ParseProperties> ParseJson(string json) =>
             JsonSerializer.Deserialize<List<ParseProperties>>(json);
 
-        public static int FindGroupId(string institute, string course, string id)
+        public static int FindGroupId(string id)
         {
-            var json = GetJson(institute, course);
+            var json = GetJson();
             var properties = ParseJson(json)
-                .Where(property => property.title.Contains(id));
+                .Where(property => property.title == id.ToUpper());
             return properties.First().id;
         }
     }

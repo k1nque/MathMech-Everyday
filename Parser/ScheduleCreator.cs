@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using Ical.Net;
@@ -19,16 +20,13 @@ namespace Parser
                 calEvent.DtStart.Date, CalendarWeekRule.FirstDay, DayOfWeek.Sunday);
 
         private static DateTime ConvertIDateTimeToDateTime(IDateTime dt) =>
-            new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
+            new(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
         
-        private static void DownloadCalendar(int institute, int course, int groupId, DateTime dateTime)
+        private static void DownloadCalendar(string groupId, DateTime dateTime)
         {
-            var id = GroupIdFinder.FindGroupId(
-                institute.ToString(),
-                course.ToString(),
-                groupId.ToString());
+            var id = GroupIdFinder.FindGroupId(groupId);
             var lastSundayDate = GetLastSundayDate(dateTime);
-            var dt = lastSundayDate.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
+            var dt = lastSundayDate.ToString("yyyyMMdd", CultureInfo.InvariantCulture); 
             using var client = new WebClient();
             client.DownloadFile("https://urfu.ru/api/schedule/groups/calendar/" +
                                 $"{id.ToString()}/{dt}/", "calendar.ics");
@@ -36,10 +34,10 @@ namespace Parser
 
         private static Calendar LoadCalendar(string fileName)
         {
-            var file = new System.IO.StreamReader(fileName);
+            var file = new StreamReader(fileName);
             var content = file.ReadToEnd();
             file.Close();
-            //TODO Delete calendar.ics
+            File.Delete(fileName);
             return Calendar.Load(content);
         }
 
@@ -71,10 +69,9 @@ namespace Parser
             return schedule;
         }
 
-        public static Schedule CreateSchedule(
-            int groupId, int course, DateTime time, int institute = 25714)
+        public static Schedule CreateSchedule(string groupId, DateTime time)
         {
-            DownloadCalendar(institute, course, groupId, time);
+            DownloadCalendar(groupId, time);
             var calendar = LoadCalendar("calendar.ics");
             return ParseCalendar(calendar);
         }
