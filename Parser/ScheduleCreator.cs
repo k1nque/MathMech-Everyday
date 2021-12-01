@@ -6,6 +6,7 @@ using System.Net;
 using Ical.Net;
 using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
+using static System.Globalization.CultureInfo;
 using Calendar = Ical.Net.Calendar;
 
 namespace Parser
@@ -16,20 +17,19 @@ namespace Parser
             dateTime.AddDays(-(int) dateTime.DayOfWeek);
         
         private static int GetWeekOfYear(CalendarEvent calEvent) =>
-            CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
+            InvariantCulture.Calendar.GetWeekOfYear(
                 calEvent.DtStart.Date, CalendarWeekRule.FirstDay, DayOfWeek.Sunday);
 
         private static DateTime ConvertIDateTimeToDateTime(IDateTime dt) =>
             new(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
         
-        private static void DownloadCalendar(string groupId, DateTime dateTime)
+        private static void DownloadCalendar(string id, DateTime dateTime)
         {
-            var id = GroupIdFinder.FindGroupId(groupId);
             var lastSundayDate = GetLastSundayDate(dateTime);
-            var dt = lastSundayDate.ToString("yyyyMMdd", CultureInfo.InvariantCulture); 
+            var dt = lastSundayDate.ToString("yyyyMMdd", InvariantCulture); 
             using var client = new WebClient();
             client.DownloadFile("https://urfu.ru/api/schedule/groups/calendar/" +
-                                $"{id.ToString()}/{dt}/", "calendar.ics");
+                                $"{id}/{dt}/", "calendar.ics");
         }
 
         private static Calendar LoadCalendar(string fileName)
@@ -68,12 +68,18 @@ namespace Parser
 
             return schedule;
         }
-
-        public static Schedule CreateSchedule(string groupId, DateTime time)
+        
+        public static Schedule CreateScheduleById(string groupId, DateTime time)
         {
             DownloadCalendar(groupId, time);
             var calendar = LoadCalendar("calendar.ics");
             return ParseCalendar(calendar);
+        }
+
+        public static Schedule CreateScheduleByName(string groupName, DateTime time)
+        {
+            var id = GroupIdFinder.FindGroupId(groupName);
+            return CreateScheduleById(id, time);
         }
     }
 }
