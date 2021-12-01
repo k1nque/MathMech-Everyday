@@ -46,7 +46,9 @@ namespace Parser
             var schedule = new Schedule();
             var calendarChildren = calendar.Children
                 .Cast<CalendarEvent>().ToList();
-            var firstEvent = calendarChildren.First();
+            var firstEvent = calendarChildren.FirstOrDefault();
+            if (firstEvent == null)
+                return schedule;
             var firstEventWeek = GetWeekOfYear(firstEvent);
             
             foreach (var calendarEvent in calendarChildren)
@@ -65,7 +67,7 @@ namespace Parser
                 );
                 schedule.AddLesson(lesson, calendarEvent.DtStart.DayOfWeek);
             }
-
+            
             return schedule;
         }
         
