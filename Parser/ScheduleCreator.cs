@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Net;
 using Ical.Net;
 using Ical.Net.CalendarComponents;
 using Ical.Net.DataTypes;
+using static System.Globalization.CultureInfo;
 using Calendar = Ical.Net.Calendar;
 
 namespace Parser
@@ -13,33 +15,29 @@ namespace Parser
     {
         private static DateTime GetLastSundayDate(DateTime dateTime) =>
             dateTime.AddDays(-(int) dateTime.DayOfWeek);
-        
+
         private static int GetWeekOfYear(CalendarEvent calEvent) =>
-            CultureInfo.InvariantCulture.Calendar.GetWeekOfYear(
+            InvariantCulture.Calendar.GetWeekOfYear(
                 calEvent.DtStart.Date, CalendarWeekRule.FirstDay, DayOfWeek.Sunday);
 
         private static DateTime ConvertIDateTimeToDateTime(IDateTime dt) =>
-            new DateTime(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
-        
-        private static void DownloadCalendar(int institute, int course, int groupId, DateTime dateTime)
+            new(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
+
+        private static void DownloadCalendar(string id, DateTime dateTime)
         {
-            var id = GroupIdFinder.FindGroupId(
-                institute.ToString(),
-                course.ToString(),
-                groupId.ToString());
             var lastSundayDate = GetLastSundayDate(dateTime);
-            var dt = lastSundayDate.ToString("yyyyMMdd", CultureInfo.InvariantCulture);
+            var dt = lastSundayDate.ToString("yyyyMMdd", InvariantCulture);
             using var client = new WebClient();
             client.DownloadFile("https://urfu.ru/api/schedule/groups/calendar/" +
-                                $"{id.ToString()}/{dt}/", "calendar.ics");
+                                $"{id}/{dt}/", "calendar.ics");
         }
 
         private static Calendar LoadCalendar(string fileName)
         {
-            var file = new System.IO.StreamReader(fileName);
+            var file = new StreamReader(fileName);
             var content = file.ReadToEnd();
             file.Close();
-            //TODO Delete calendar.ics
+            File.Delete(fileName);
             return Calendar.Load(content);
         }
 
@@ -50,7 +48,7 @@ namespace Parser
                 .Cast<CalendarEvent>().ToList();
             var firstEvent = calendarChildren.First();
             var firstEventWeek = GetWeekOfYear(firstEvent);
-            
+
             foreach (var calendarEvent in calendarChildren)
             {
                 var currentEventWeek = GetWeekOfYear(calendarEvent);
@@ -71,12 +69,17 @@ namespace Parser
             return schedule;
         }
 
-        public static Schedule CreateSchedule(
-            int groupId, int course, DateTime time, int institute = 25714)
+        public static Schedule CreateScheduleById(string groupId, DateTime time)
         {
-            DownloadCalendar(institute, course, groupId, time);
+            DownloadCalendar(groupId, time);
             var calendar = LoadCalendar("calendar.ics");
             return ParseCalendar(calendar);
+        }
+
+        public static Schedule CreateScheduleByName(string groupName, DateTime time)
+        {
+            var id = GroupIdFinder.FindGroupId(groupName);
+            return CreateScheduleById(id, time);
         }
     }
 }

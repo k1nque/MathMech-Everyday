@@ -6,6 +6,11 @@
 
   <ItemGroup>
     <PackageReference Include="Ical.Net" Version="4.2.0" />
+    <PackageReference Include="NCron" Version="2.3.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove="DetectGroupId.cs" />
   </ItemGroup>
 
 </Project>

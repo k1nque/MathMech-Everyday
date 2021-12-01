@@ -9,14 +9,14 @@ namespace Parser
     {
         public DayOfWeek Day { get; }
         public List<Lesson> Schedule { get; } // TODO encapsulate
-        
+
         public DaySchedule(DayOfWeek day)
         {
             Day = day;
             Schedule = new List<Lesson>();
         }
     }
-    
+
     public class Schedule
     {
         public List<DaySchedule> WeekSchedule { get; } // TODO encapsulate
@@ -28,7 +28,7 @@ namespace Parser
             foreach (var day in daysOfWeek)
                 WeekSchedule.Add(new DaySchedule(day));
         }
-        
+
         public void AddLesson(Lesson lesson, DayOfWeek day)
         {
             var daySchedule = WeekSchedule.First(dS => dS.Day == day);
