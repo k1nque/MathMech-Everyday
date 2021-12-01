@@ -8,6 +8,11 @@
 
   <ItemGroup>
     <ProjectReference Include="..\Parser\Parser.csproj" />
+    <ProjectReference Include="..\TelegramBot\TelegramBot.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="NCron" Version="2.3.0" />
   </ItemGroup>
 
 </Project>

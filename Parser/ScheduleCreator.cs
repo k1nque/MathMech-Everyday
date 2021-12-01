@@ -15,18 +15,18 @@ namespace Parser
     {
         private static DateTime GetLastSundayDate(DateTime dateTime) =>
             dateTime.AddDays(-(int) dateTime.DayOfWeek);
-        
+
         private static int GetWeekOfYear(CalendarEvent calEvent) =>
             InvariantCulture.Calendar.GetWeekOfYear(
                 calEvent.DtStart.Date, CalendarWeekRule.FirstDay, DayOfWeek.Sunday);
 
         private static DateTime ConvertIDateTimeToDateTime(IDateTime dt) =>
             new(dt.Year, dt.Month, dt.Day, dt.Hour, dt.Minute, dt.Second);
-        
+
         private static void DownloadCalendar(string id, DateTime dateTime)
         {
             var lastSundayDate = GetLastSundayDate(dateTime);
-            var dt = lastSundayDate.ToString("yyyyMMdd", InvariantCulture); 
+            var dt = lastSundayDate.ToString("yyyyMMdd", InvariantCulture);
             using var client = new WebClient();
             client.DownloadFile("https://urfu.ru/api/schedule/groups/calendar/" +
                                 $"{id}/{dt}/", "calendar.ics");
@@ -50,7 +50,7 @@ namespace Parser
             if (firstEvent == null)
                 return schedule;
             var firstEventWeek = GetWeekOfYear(firstEvent);
-            
+
             foreach (var calendarEvent in calendarChildren)
             {
                 var currentEventWeek = GetWeekOfYear(calendarEvent);
@@ -70,7 +70,7 @@ namespace Parser
             
             return schedule;
         }
-        
+
         public static Schedule CreateScheduleById(string groupId, DateTime time)
         {
             DownloadCalendar(groupId, time);

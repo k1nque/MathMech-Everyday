@@ -18,11 +18,11 @@ namespace Parser
             public int institute_id { get; set; }
             public string title { get; set; }
         }
-        
+
         private static string GetJson(string instituteId = default) =>
             new WebClient().DownloadString(
                 $"https://urfu.ru/api/schedule/groups/{instituteId}");
-
+        
         private static List<ParseProperties> ParseJson(string json) =>
             JsonSerializer.Deserialize<List<ParseProperties>>(json);
 
