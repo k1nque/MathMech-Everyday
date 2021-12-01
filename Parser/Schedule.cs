@@ -15,6 +15,17 @@ namespace Parser
             Day = day;
             Schedule = new List<Lesson>();
         }
+
+        public override string ToString()
+        {
+            var joiningList = new List<string>() {Day.ToString()};
+            foreach (var lesson in Schedule)
+            {
+                joiningList.Add(lesson.ToString());
+            }
+
+            return String.Join("\n", joiningList);
+        }
     }
 
     public class Schedule
@@ -37,5 +48,16 @@ namespace Parser
 
         public DaySchedule GetDaySchedule(DayOfWeek day) =>
             WeekSchedule.First(dS => dS.Day == day);
+
+        public override string ToString()
+        {
+            var joiningList = new List<string>();
+            foreach (var daySchedule in WeekSchedule)
+            {
+                joiningList.Add(daySchedule.ToString());
+            }
+
+            return String.Join("\n", joiningList);
+        }
     }
 }

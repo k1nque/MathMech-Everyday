@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace Parser
 {
@@ -18,6 +20,11 @@ namespace Parser
             Subject = subject;
             Start = start;
             End = end;
+        }
+
+        public override string ToString()
+        {
+            return String.Join(" ", new List<string>() {Location, Teacher, Subject});
         }
     }
 }
