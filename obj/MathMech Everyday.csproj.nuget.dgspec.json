@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Lenovo\\Desktop\\Татьяна\\Новая папка\\Учебная\\ООП\\проект\\с гита\\MathMech-Everyday-dev\\MathMech Everyday\\MathMech Everyday.csproj": {}
+    "D:\\lele\\MathMech-Everyday\\MathMech Everyday.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Lenovo\\Desktop\\Татьяна\\Новая папка\\Учебная\\ООП\\проект\\с гита\\MathMech-Everyday-dev\\MathMech Everyday\\MathMech Everyday.csproj": {
+    "D:\\lele\\MathMech-Everyday\\MathMech Everyday.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Lenovo\\Desktop\\Татьяна\\Новая папка\\Учебная\\ООП\\проект\\с гита\\MathMech-Everyday-dev\\MathMech Everyday\\MathMech Everyday.csproj",
+        "projectUniqueName": "D:\\lele\\MathMech-Everyday\\MathMech Everyday.csproj",
         "projectName": "MathMech Everyday",
-        "projectPath": "C:\\Users\\Lenovo\\Desktop\\Татьяна\\Новая папка\\Учебная\\ООП\\проект\\с гита\\MathMech-Everyday-dev\\MathMech Everyday\\MathMech Everyday.csproj",
-        "packagesPath": "C:\\Users\\Lenovo\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Lenovo\\Desktop\\Татьяна\\Новая папка\\Учебная\\ООП\\проект\\с гита\\MathMech-Everyday-dev\\MathMech Everyday\\obj\\",
+        "projectPath": "D:\\lele\\MathMech-Everyday\\MathMech Everyday.csproj",
+        "packagesPath": "C:\\Users\\k1nqPC\\.nuget\\packages\\",
+        "outputPath": "D:\\lele\\MathMech-Everyday\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\Lenovo\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\k1nqPC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -84,7 +84,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.102\\RuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.200\\RuntimeIdentifierGraph.json"
         }
       }
     }
