@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot;
 
@@ -19,10 +20,9 @@ namespace MathMech_Everyday
             waitingGroupNumber,
             registered
         };
-        
+
         public static async Task GetMessage(TelegramBotClient bot)
         {
-            
             var offset = 0;
             var timeout = 10;
             try
@@ -54,56 +54,76 @@ namespace MathMech_Everyday
                 chatStatus.Add(chatId, Status.newChat);
             }
 
-            //TODO.. switch/case
-            if (text == "/start")
+            switch (text)
             {
-                Console.WriteLine("Message received");
-                await bot.SendTextMessageAsync(chatId, "Привет! Я пока могу делать следующие действия:" +
-                                                       @"/n//reg чтобы зарегестрироваться" +
-                                                       "/nПросто отправь номер группы, чтобы получить актуальное прямо сейчас расписание" +
-                                                       "/n//help");
-            }
-            else if (text == "/reg")
-            {
-                if (chatStatus[chatId] == Status.registered)
-                {
-                    await bot.SendTextMessageAsync(message.Chat.Id, "Я всё видел, ты уже зарегестрировался");
-                }
-                else
-                {
-                    //DataBaseController.Registration(message.Chat.Id.ToString(), message.Chat.Username.ToString());
-                    await bot.SendTextMessageAsync(message.Chat.Id, "Введи своё ФИО :)");
-                    chatStatus[message.Chat.Id] = Status.waitingForName;
-                }
-            }
-            else if (text == "расписание")
-            {
-                if (chatStatus[chatId] == Status.registered)
-                    await bot.SendTextMessageAsync(message.Chat.Id, "Держи расписание, мне не жалко");
-                else
-                    await bot.SendTextMessageAsync(message.Chat.Id, "Ты пока не зарегестрирован. " +
-                                                                    "Введи номер своей группы если хочешь узнать расписание. " +
-                                                                    "Или напиши /reg чтобы зарегестрироваться");
-            }
-            else
-            {
-                if (chatStatus.ContainsKey(message.Chat.Id))
-                {
-                    if (chatStatus[chatId] == Status.waitingForName)
+                case "/start":
+                    await bot.SendTextMessageAsync(chatId, "Привет! Я пока могу делать следующие действия:" +
+                                                           "\n/reg чтобы зарегестрироваться и быстро получать расписание" +
+                                                           "\n/ds или слово \"расписание\" - и я покажу тебе твоё расписание на сегодня" +
+                                                           "(только для зарегестрированных пользователей)" +
+                                                           "\n/help - расскажу про все мои возможности" +
+                                                           "\n/busy покажу какие кабинеты сейчас заняты" +
+                                                           "\nИли росто отправь номер группы в формате \"р МЕН-000000\", чтобы получить актуальное расписание на сегодня");
+                    break;
+
+                case "/reg":
+                    if (chatStatus[chatId] == Status.registered)
                     {
-                        await bot.SendTextMessageAsync(message.Chat.Id, "Введи номер своей группы :)");
-                        chatStatus[chatId] = Status.waitingGroupNumber;
+                        await bot.SendTextMessageAsync(message.Chat.Id, "Я всё видел, ты уже зарегестрировался!" +
+                                                                        "Теперь ты можешь воспользоваться функцией /ds");
                     }
-                    else if (chatStatus[chatId] == Status.waitingGroupNumber)
+                    else
                     {
                         await bot.SendTextMessageAsync(message.Chat.Id,
+                            "Введи свой номер группы в формате \"МЕН-000000\" :)");
+                        chatStatus[message.Chat.Id] = Status.waitingGroupNumber;
+                    }
+
+                    break;
+
+                case ("/ds" or "расписание"):
+                    if (chatStatus[chatId] == Status.registered)
+                        await bot.SendTextMessageAsync(message.Chat.Id, "Держи расписание, мне не жалко");
+                        //вызов метода Данила, который возвращает расписание на сегодня с registeredUsers[chatId]
+                    else
+                        await bot.SendTextMessageAsync(message.Chat.Id, "Ты пока не зарегестрирован. " +
+                                                                        "Введи номер своей группы в формате \"МЕН-000000\"" +
+                                                                        " если хочешь узнать расписание. " +
+                                                                        "Или напиши /reg чтобы зарегестрироваться");
+                    break;
+
+                case "/busy":
+                    var timeMessage = message.ForwardDate;
+                    //показать кабинеты, которые сейчас заняты, вызов метода Данила с timeMessage
+                    break;
+
+                case "/help":
+                    await bot.SendTextMessageAsync(message.Chat.Id, "\n/reg чтобы зарегестрироваться и быстро получать расписание" +
+                                                                    "\n/ds или слово \"расписание\" - и я покажу тебе твоё расписание на сегодня" +
+                                                                    "(только для зарегестрированных пользователей)" +
+                                                                    "\n/busy покажу какие кабинеты сейчас заняты" +
+                                                                    "\nИли росто отправь номер группы в формате \"р МЕН-000000\", чтобы получить актуальное расписание на сегодня");
+                    break;
+
+                default:
+                    if (chatStatus[chatId] == Status.waitingGroupNumber && Group.AllGroupNumbers.Contains(text))
+                    {
+                        //DataBaseController.Registration(message.Chat.Id.ToString(), message.Chat.Username.ToString());
+                        await bot.SendTextMessageAsync(message.Chat.Id,
                             "Прекрасно, теперь ты можешь получать расписание своей группы просто" +
-                            @"написав слово расписание ""расписание""");
+                            "написав слово \"расписание\" или вызвать команду /ds");
                         chatStatus[chatId] = Status.registered;
                         registeredUsers.Add(chatId, text);
                     }
+                    else
+                    {
+                        await bot.SendTextMessageAsync(message.Chat.Id,
+                            "Я пока не знаю такой команды, проверь правильно ли введены данные");
+                    }
+
+                    //либо авторизация, либо ошибка с отправлением сообщения пользователю "я не знаю такую команду"
+                    break;
                 }
             }
         }
     }
-}
