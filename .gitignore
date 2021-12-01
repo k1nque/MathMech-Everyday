@@ -43,3 +43,5 @@ bld/
 *.pidb
 *.svclog
 *.scc
+
+*Secret.cs
