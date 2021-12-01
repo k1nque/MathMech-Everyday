@@ -1,0 +1,13 @@
+﻿# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/projectSettingsUpdater.xml
+/.idea.Bot.iml
+/contentModel.xml
+/modules.xml
+# Datasource local storage ignored files
+/../../../../../../../../../../../../../../../../:\Users\Lenovo\Desktop\Татьяна\Новая папка\Учебная\ООП\проект\с гита\Bot\Bot\Bot\.idea\.idea.Bot.dir\.idea/dataSources/
+/dataSources.local.xml
+# Editor-based HTTP Client requests
+/httpRequests/
