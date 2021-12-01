@@ -18,7 +18,6 @@ namespace Parser
             public int institute_id { get; set; }
             public string title { get; set; }
         }
-
         private static string GetJson(string instituteId = default) =>
             new WebClient().DownloadString(
                 $"https://urfu.ru/api/schedule/groups/{instituteId}");
@@ -52,7 +51,8 @@ namespace Parser
                 var mathMechProperties = SelectMathMechGroups(parseProperties);
                 ids.Add(mathMechProperties.Select(properties => properties.id));
             }
-            return ids.SelectMany(list => list.Select(id => id.ToString()));
+            return ids.SelectMany(list => 
+                list.Select(id => id.ToString()));
         }
     }
 }

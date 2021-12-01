@@ -8,14 +8,12 @@ namespace Parser
     public class DaySchedule
     {
         public DayOfWeek Day { get; }
-
         public List<Lesson> Schedule { get; } = new();
-
         public DaySchedule(DayOfWeek day) => Day = day;
 
         public override string ToString()
         {
-            var joiningList = new List<string>() {Day.ToString()};
+            var joiningList = new List<string> {Day.ToString()};
             joiningList.AddRange(Schedule
                 .Select(lesson => lesson.ToString()));
             return string.Join("\n", joiningList);
