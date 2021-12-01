@@ -1,0 +1,217 @@
+{
+  "version": 3,
+  "targets": {
+    "net5.0": {
+      "Newtonsoft.Json/12.0.2": {
+        "type": "package",
+        "compile": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        },
+        "runtime": {
+          "lib/netstandard2.0/Newtonsoft.Json.dll": {}
+        }
+      },
+      "System.Threading.Channels/5.0.0": {
+        "type": "package",
+        "compile": {
+          "lib/netcoreapp3.0/System.Threading.Channels.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.0/System.Threading.Channels.dll": {}
+        }
+      },
+      "Telegram.Bot/17.0.0-alpha.4": {
+        "type": "package",
+        "dependencies": {
+          "Newtonsoft.Json": "12.0.2"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Telegram.Bot.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Telegram.Bot.dll": {}
+        }
+      },
+      "Telegram.Bot.Extensions.Polling/1.0.0-alpha.1": {
+        "type": "package",
+        "dependencies": {
+          "System.Threading.Channels": "5.0.0",
+          "Telegram.Bot": "17.0.0-alpha.1"
+        },
+        "compile": {
+          "lib/netcoreapp3.1/Telegram.Bot.Extensions.Polling.dll": {}
+        },
+        "runtime": {
+          "lib/netcoreapp3.1/Telegram.Bot.Extensions.Polling.dll": {}
+        }
+      }
+    }
+  },
+  "libraries": {
+    "Newtonsoft.Json/12.0.2": {
+      "sha512": "rTK0s2EKlfHsQsH6Yx2smvcTCeyoDNgCW7FEYyV01drPlh2T243PR2DiDXqtC5N4GDm4Ma/lkxfW5a/4793vbA==",
+      "type": "package",
+      "path": "newtonsoft.json/12.0.2",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "LICENSE.md",
+        "lib/net20/Newtonsoft.Json.dll",
+        "lib/net20/Newtonsoft.Json.xml",
+        "lib/net35/Newtonsoft.Json.dll",
+        "lib/net35/Newtonsoft.Json.xml",
+        "lib/net40/Newtonsoft.Json.dll",
+        "lib/net40/Newtonsoft.Json.xml",
+        "lib/net45/Newtonsoft.Json.dll",
+        "lib/net45/Newtonsoft.Json.xml",
+        "lib/netstandard1.0/Newtonsoft.Json.dll",
+        "lib/netstandard1.0/Newtonsoft.Json.xml",
+        "lib/netstandard1.3/Newtonsoft.Json.dll",
+        "lib/netstandard1.3/Newtonsoft.Json.xml",
+        "lib/netstandard2.0/Newtonsoft.Json.dll",
+        "lib/netstandard2.0/Newtonsoft.Json.xml",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net40+sl5+win8+wp8+wpa81/Newtonsoft.Json.xml",
+        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.dll",
+        "lib/portable-net45+win8+wp8+wpa81/Newtonsoft.Json.xml",
+        "newtonsoft.json.12.0.2.nupkg.sha512",
+        "newtonsoft.json.nuspec"
+      ]
+    },
+    "System.Threading.Channels/5.0.0": {
+      "sha512": "RLBIxntLaG9pRmmuVDwY1kc8Bvp/FQzSxPU+19VekkScKkWtVP9r8bLhm28ama3usc816UBrmkg3vv3jUea/hw==",
+      "type": "package",
+      "path": "system.threading.channels/5.0.0",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "Icon.png",
+        "LICENSE.TXT",
+        "THIRD-PARTY-NOTICES.TXT",
+        "lib/net461/System.Threading.Channels.dll",
+        "lib/net461/System.Threading.Channels.xml",
+        "lib/netcoreapp3.0/System.Threading.Channels.dll",
+        "lib/netcoreapp3.0/System.Threading.Channels.xml",
+        "lib/netstandard1.3/System.Threading.Channels.dll",
+        "lib/netstandard1.3/System.Threading.Channels.xml",
+        "lib/netstandard2.0/System.Threading.Channels.dll",
+        "lib/netstandard2.0/System.Threading.Channels.xml",
+        "lib/netstandard2.1/System.Threading.Channels.dll",
+        "lib/netstandard2.1/System.Threading.Channels.xml",
+        "system.threading.channels.5.0.0.nupkg.sha512",
+        "system.threading.channels.nuspec",
+        "useSharedDesignerContext.txt",
+        "version.txt"
+      ]
+    },
+    "Telegram.Bot/17.0.0-alpha.4": {
+      "sha512": "wpcg+AlUYNoD+FqIoS3WRETqAF13LG8nP/4hu9AigfKKqqoz8itkBCQPtVc35GcZr8k8UPLzSooeR8jtjFsYGw==",
+      "type": "package",
+      "path": "telegram.bot/17.0.0-alpha.4",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netcoreapp3.1/Telegram.Bot.dll",
+        "lib/netcoreapp3.1/Telegram.Bot.pdb",
+        "lib/netcoreapp3.1/Telegram.Bot.xml",
+        "lib/netstandard2.0/Telegram.Bot.dll",
+        "lib/netstandard2.0/Telegram.Bot.pdb",
+        "lib/netstandard2.0/Telegram.Bot.xml",
+        "package-icon.png",
+        "telegram.bot.17.0.0-alpha.4.nupkg.sha512",
+        "telegram.bot.nuspec"
+      ]
+    },
+    "Telegram.Bot.Extensions.Polling/1.0.0-alpha.1": {
+      "sha512": "S34hwEeP/ueGNwolUUDnKUMbZ+2XUawsUtocmbJ9FpArmxpqB0gxg/MBNi6jkp4yJ5ZJWfz+Vy2vJBe9uGKIhw==",
+      "type": "package",
+      "path": "telegram.bot.extensions.polling/1.0.0-alpha.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "lib/netcoreapp3.1/Telegram.Bot.Extensions.Polling.dll",
+        "lib/netcoreapp3.1/Telegram.Bot.Extensions.Polling.pdb",
+        "lib/netcoreapp3.1/Telegram.Bot.Extensions.Polling.xml",
+        "lib/netstandard2.0/Telegram.Bot.Extensions.Polling.dll",
+        "lib/netstandard2.0/Telegram.Bot.Extensions.Polling.pdb",
+        "lib/netstandard2.0/Telegram.Bot.Extensions.Polling.xml",
+        "package-icon.png",
+        "telegram.bot.extensions.polling.1.0.0-alpha.1.nupkg.sha512",
+        "telegram.bot.extensions.polling.nuspec"
+      ]
+    }
+  },
+  "projectFileDependencyGroups": {
+    "net5.0": [
+      "Telegram.Bot >= 17.0.0-alpha.4",
+      "Telegram.Bot.Extensions.Polling >= 1.0.0-alpha.1"
+    ]
+  },
+  "packageFolders": {
+    "C:\\Users\\k1nqPC\\.nuget\\packages\\": {}
+  },
+  "project": {
+    "version": "1.0.0",
+    "restore": {
+      "projectUniqueName": "D:\\lele\\MathMech-Everyday\\TelegramBot\\TelegramBot.csproj",
+      "projectName": "TelegramBot",
+      "projectPath": "D:\\lele\\MathMech-Everyday\\TelegramBot\\TelegramBot.csproj",
+      "packagesPath": "C:\\Users\\k1nqPC\\.nuget\\packages\\",
+      "outputPath": "D:\\lele\\MathMech-Everyday\\TelegramBot\\obj\\",
+      "projectStyle": "PackageReference",
+      "configFilePaths": [
+        "C:\\Users\\k1nqPC\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
+      ],
+      "originalTargetFrameworks": [
+        "net5.0"
+      ],
+      "sources": {
+        "C:\\Program Files (x86)\\Microsoft SDKs\\NuGetPackages\\": {},
+        "https://api.nuget.org/v3/index.json": {}
+      },
+      "frameworks": {
+        "net5.0": {
+          "targetAlias": "net5.0",
+          "projectReferences": {}
+        }
+      },
+      "warningProperties": {
+        "warnAsError": [
+          "NU1605"
+        ]
+      }
+    },
+    "frameworks": {
+      "net5.0": {
+        "targetAlias": "net5.0",
+        "dependencies": {
+          "Telegram.Bot": {
+            "target": "Package",
+            "version": "[17.0.0-alpha.4, )"
+          },
+          "Telegram.Bot.Extensions.Polling": {
+            "target": "Package",
+            "version": "[1.0.0-alpha.1, )"
+          }
+        },
+        "imports": [
+          "net461",
+          "net462",
+          "net47",
+          "net471",
+          "net472",
+          "net48"
+        ],
+        "assetTargetFallback": true,
+        "warn": true,
+        "frameworkReferences": {
+          "Microsoft.NETCore.App": {
+            "privateAssets": "all"
+          }
+        },
+        "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\5.0.200\\RuntimeIdentifierGraph.json"
+      }
+    }
+  }
+}

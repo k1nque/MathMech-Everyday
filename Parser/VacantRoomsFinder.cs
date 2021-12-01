@@ -4,7 +4,7 @@ using System.Linq;
 
 namespace Parser
 {
-    public class VacantRoomsFinder
+    public static class VacantRoomsFinder
     {
         private static IEnumerable<DaySchedule> GetGroupsSchedule(
             IEnumerable<string> groupsId, DateTime dateTime) =>
@@ -20,7 +20,7 @@ namespace Parser
         private static IEnumerable<string> GetLessonsRooms(IEnumerable<Lesson> lessons) =>
             lessons.Select(lesson => lesson.Location);
 
-        public IEnumerable<string> FindVacant(DateTime dateTime) //institute?
+        public static IEnumerable<string> FindVacant(DateTime dateTime) //institute?
         {
             var ids = new List<string>();
             var groupsSchedule = GetGroupsSchedule(ids, dateTime);
