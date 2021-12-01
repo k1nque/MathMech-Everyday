@@ -1,0 +1,7 @@
+D:\lele\MathMech-Everyday\MathMech Everyday\bin\Debug\net5.0\Ical.Net.dll
+D:\lele\MathMech-Everyday\MathMech Everyday\bin\Debug\net5.0\NodaTime.dll
+D:\lele\MathMech-Everyday\MathMech Everyday\bin\Debug\net5.0\Parser.dll
+D:\lele\MathMech-Everyday\MathMech Everyday\obj\Debug\net5.0\MathMech Everyday.csprojAssemblyReference.cache
+D:\lele\MathMech-Everyday\MathMech Everyday\obj\Debug\net5.0\MathMech Everyday.GeneratedMSBuildEditorConfig.editorconfig
+D:\lele\MathMech-Everyday\MathMech Everyday\obj\Debug\net5.0\MathMech Everyday.AssemblyInfoInputs.cache
+D:\lele\MathMech-Everyday\MathMech Everyday\obj\Debug\net5.0\MathMech Everyday.AssemblyInfo.cs
