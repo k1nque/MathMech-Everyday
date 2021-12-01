@@ -1,0 +1,145 @@
+﻿using System;
+using System.Data.SQLite;
+using System.Net;
+using System.Threading.Tasks;
+using Telegram.Bot;
+using System.Collections.Generic;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
+
+namespace MathMech_Everyday
+{
+    class Program
+    {
+
+        public static string token = "2104283130:AAH-kyJoKCZFT6crARvhLlZcum2lyhfRN3o";
+        //private static string token;
+        public static SQLiteConnection DB;
+        private static Dictionary<long, Status> chatStatus = new Dictionary<long, Status>();
+        private static Dictionary<long, string> registeredUsers =  new Dictionary<long, string>(); //хранит номер группы зарегестрированных пользователей
+        enum Status
+        {
+            newChat,
+            waitingForName,
+            waitingGroupNumber,
+            registered
+        };
+        static void Main(string[] args)
+        {
+            //TODO нормальный секрет токена
+            //token = Environment.GetEnvironmentVariable("Token");
+            while (true)
+            {
+                try
+                {
+                    GetMessage().Wait();
+                }
+                catch (Exception exception)
+                {
+                    Console.WriteLine(String.Format("Error: {0}", exception));
+                }
+            }
+        }
+
+        static async Task GetMessage()
+        {
+            var bot = new TelegramBotClient(token);
+            var offset = 0;
+            var timeout = 10;
+            try
+            {
+                await bot.SetWebhookAsync("");
+                while (true)
+                {
+                    var updates = await bot.GetUpdatesAsync(offset, timeout);
+                    foreach (var update in updates)
+                    {
+                        await MessageHandling(update, bot);
+                        offset = update.Id + 1;
+                    }
+                }
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(String.Format("Error: {0}", exception));
+            }
+        }
+
+        public static void Registration(string chatId, string username)
+        {
+            try
+            {
+                DB = new SQLiteConnection("Data Source=DB.db;");
+                DB.Open();
+                SQLiteCommand regCMD = DB.CreateCommand();
+                regCMD.CommandText = $"insert into RegUsers (ChatId, Username) values ('{chatId}', '{username}')";
+                regCMD.ExecuteNonQuery();
+                DB.Close();
+            }
+            catch (Exception exception)
+            {
+                Console.WriteLine(String.Format("Error: {0}", exception));
+            }
+        }
+
+        static async Task MessageHandling(Telegram.Bot.Types.Update update, TelegramBotClient bot)
+        {
+            var message = update.Message;
+            var text = message.Text.ToLower();
+            var chatId = message.Chat.Id;
+            if (!chatStatus.ContainsKey(chatId))
+            {
+                chatStatus.Add(chatId, Status.newChat);
+            }
+            //TODO.. switch/case
+            if (text == "/start")
+            {
+                Console.WriteLine("Message received");
+                await bot.SendTextMessageAsync(chatId, "Привет! Я пока могу делать следующие действия:" +
+                    @"/n//reg чтобы зарегестрироваться" +
+                    "/nПросто отправь номер группы, чтобы получить актуальное прямо сейчас расписание" +
+                    "/n//help");
+            }
+            else if (text == "/reg")
+            {
+                if (chatStatus[chatId] == Status.registered)
+                {
+                    await bot.SendTextMessageAsync(message.Chat.Id, "Я всё видел, ты уже зарегестрировался");
+                }
+                else
+                {
+                    //Registration(message.Chat.Id.ToString(), message.Chat.Username.ToString());
+                    await bot.SendTextMessageAsync(message.Chat.Id, "Введи своё ФИО :)");
+                    chatStatus[message.Chat.Id] = Status.waitingForName;
+                }
+            }
+            else if (text == "расписание")
+            {
+                if (chatStatus[chatId] == Status.registered)
+                    await bot.SendTextMessageAsync(message.Chat.Id, "Держи расписание, мне не жалко");
+                else
+                    await bot.SendTextMessageAsync(message.Chat.Id, "Ты пока не зарегестрирован. " +
+                        "Введи номер своей группы если хочешь узнать расписание. " +
+                        "Или напиши /reg чтобы зарегестрироваться");
+            }    
+            else
+            {
+                if (chatStatus.ContainsKey(message.Chat.Id))
+                {
+                    if (chatStatus[chatId] == Status.waitingForName)
+                    {
+                        await bot.SendTextMessageAsync(message.Chat.Id, "Введи номер своей группы :)");
+                        chatStatus[chatId] = Status.waitingGroupNumber;
+                    }
+                    else if (chatStatus[chatId] == Status.waitingGroupNumber)
+                    {
+                        await bot.SendTextMessageAsync(message.Chat.Id, "Прекрасно, теперь ты можешь получать расписание своей группы просто" +
+                            @"написав слово расписание ""расписание""");
+                        chatStatus[chatId] = Status.registered;
+                        registeredUsers.Add(chatId, text);
+                    }
+                }
+            }
+        }
+    }
+}
