@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Telegram.Bot;
+using System.Text.Json;
 
 namespace MathMech_Everyday
 {
@@ -83,8 +85,14 @@ namespace MathMech_Everyday
 
                 case ("/ds" or "расписание"):
                     if (chatStatus[chatId] == Status.registered)
+                    {
                         await bot.SendTextMessageAsync(message.Chat.Id, "Держи расписание, мне не жалко");
-                        //вызов метода Данила, который возвращает расписание на сегодня с registeredUsers[chatId]
+                        var schedule = ScheduleCreator.CreateScheduleByName(registeredUsers[chatId], DateTime.Now);
+                        await bot.SendTextMessageAsync(message.Chat.Id, schedule.ToString());
+                        //Parser.ScheduleCreator.CreateScheduleById(registeredUsers[chatId], DateTime.Now); //Если в листе хранятся id групп с сайта УрФУ 
+                    }
+
+                    //вызов метода Данила, который возвращает расписание на сегодня с registeredUsers[chatId]
                     else
                         await bot.SendTextMessageAsync(message.Chat.Id, "Ты пока не зарегестрирован. " +
                                                                         "Введи номер своей группы в формате \"МЕН-000000\"" +
@@ -94,7 +102,11 @@ namespace MathMech_Everyday
 
                 case "/busy":
                     var timeMessage = message.ForwardDate;
-                    //показать кабинеты, которые сейчас заняты, вызов метода Данила с timeMessage
+                    //var jsonString = File.ReadAllText("rooms.json");
+                    //var cache = JsonSerializer.Deserialize<IEnumerable<string>>("rooms.json");
+                    //Сериализация списка еще не работает
+                    var rooms = Parser.VacantRoomsFinder.FindVacant(DateTime.Now);
+                    await bot.SendTextMessageAsync(message.Chat.Id, rooms.ToString());
                     break;
 
                 case "/help":
