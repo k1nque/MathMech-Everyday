@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Telegram.Bot;
@@ -12,50 +13,87 @@ namespace TelegramBot
 {
     public class Bot
     {
-        private string botToken;
         private TelegramBotClient botClient;
 
         public Bot(string botToken)
         {
-            this.botToken = botToken;
-            this.botClient = new TelegramBotClient(this.botToken);
+            this.botClient = new TelegramBotClient(botToken);
         }
 
-        Task HandleErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
+        Task HandleErrorAsync(ITelegramBotClient client, Exception exception, CancellationToken cancellationToken)
         {
-            var ErrorMessage = exception switch
+            var errorMessage = exception switch
             {
                 ApiRequestException apiRequestException =>
                     $"Telegram API Error:\n[{apiRequestException.ErrorCode}]\n{apiRequestException.Message}",
                 _ => exception.ToString()
             };
 
-            Console.WriteLine(ErrorMessage);
+            Console.WriteLine(errorMessage);
             return Task.CompletedTask;
         }
 
-        async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+        async Task HandleUpdateAsync(ITelegramBotClient client, Update update, CancellationToken cancellationToken)
         {
             if (update.Type != UpdateType.Message)
                 return;
             if (update.Message.Type != MessageType.Text)
                 return;
 
+            var text = update.Message.Text.ToLower();
             var chatId = update.Message.Chat.Id;
 
-            Console.WriteLine($"Received a '{update.Message.Text}' message in chat {chatId}.");
+            if (UserState.GetChatStatus(chatId) == null)
+            {
+                UserState.SetChatStatus(chatId, UserState.Status.NewChat);
+            }
 
-            await botClient.SendTextMessageAsync(
-                chatId: chatId,
-                text: "You said:\n" + update.Message.Text
-            );
+            switch (text)
+            {
+                case "/start":
+                    await MessageHandler.PrintStart(botClient, chatId);
+                    break;
+                case "/help":
+                    await MessageHandler.PrintHelp(botClient, chatId);
+                    break;
+                case "/reg":
+                    await MessageHandler.Register(botClient, chatId);
+                    break;
+                case ("/ds" or "расписание"):
+                    await MessageHandler.PrintSchedule(botClient, chatId);
+                    break;
+                case "/busy":
+                    await MessageHandler.PrintVacantRooms(botClient, chatId);
+                    break;
+                default:
+                    // либо авторизация, либо ошибка с отправлением сообщения пользователю "я не знаю такую команду"
+                    // todo: text лежит в lowercase, а в списке большими буквами
+                    if (UserState.GetChatStatus(chatId) == UserState.Status.WaitingGroupNumber
+                        && Group.AllGroupNumbers.Contains(update.Message.Text))
+                    {
+                        await MessageHandler.SetGroupNumber(botClient, chatId, update.Message.Text);
+                    }
+                    else
+                    {
+                        await client.SendTextMessageAsync(chatId,
+                            "Я пока не знаю такой команды, проверь правильно ли введены данные");
+                    }
+
+                    break;
+            }
         }
-
 
         public void Start()
         {
-            botClient.StartReceiving(new DefaultUpdateHandler(HandleUpdateAsync, HandleErrorAsync));
+            var cts = new CancellationTokenSource();
+            var receiverOptions = new ReceiverOptions {AllowedUpdates = { }};
+
+            //todo: переделать на вебхуки
+            botClient.StartReceiving(HandleUpdateAsync, HandleErrorAsync, receiverOptions,
+                cancellationToken: cts.Token);
+            Console.WriteLine("Start listening");
             Console.ReadLine();
+            cts.Cancel();
         }
     }
 }
