@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Text.Json;
@@ -18,10 +19,21 @@ namespace Parser
             public int institute_id { get; set; }
             public string title { get; set; }
         }
-        private static string GetJson(string instituteId = default) =>
-            new WebClient().DownloadString(
+
+        private static string GetJson(string instituteId = default)
+        {
+            var result = new WebClient().DownloadString(
                 $"https://urfu.ru/api/schedule/groups/{instituteId}");
-        
+
+            // fix for empty answers
+            if (result.Length <= 4)
+            {
+                return File.ReadAllText("groups.json");
+            }
+            File.WriteAllText("groups.json", result);
+            return result;
+        }
+
         private static List<ParseProperties> ParseJson(string json) =>
             JsonSerializer.Deserialize<List<ParseProperties>>(json);
 
