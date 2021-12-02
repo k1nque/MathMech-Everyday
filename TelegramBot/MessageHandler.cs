@@ -17,7 +17,7 @@ namespace TelegramBot
         {
             await bot.SendTextMessageAsync(chatId,
                 "Привет! Я пока могу делать следующие действия:" +
-                "\n/reg чтобы зарегестрироваться и быстро получать расписание" +
+                "\n/reg чтобы зарегистрироваться и быстро получать расписание" +
                 "\n/ds или слово \"расписание\" - и я покажу тебе твоё расписание на сегодня" +
                 "(только для зарегистрированных пользователей)" +
                 "\n/help - расскажу про все мои возможности" +
@@ -28,30 +28,33 @@ namespace TelegramBot
         public static async Task PrintHelp(TelegramBotClient bot, long chatId)
         {
             await bot.SendTextMessageAsync(chatId,
-                "\n/reg чтобы зарегестрироваться и быстро получать расписание" +
+                "\n/reg чтобы зарегистрироваться и быстро получать расписание" +
                 "\n/ds или слово \"расписание\" - и я покажу тебе твоё расписание на сегодня" +
                 "(только для зарегистрированных пользователей)" +
                 "\n/busy покажу какие кабинеты сейчас заняты" +
                 "\nИли просто отправь номер группы в формате \"р МЕН-000000\", чтобы получить актуальное расписание на сегодня");
         }
 
+        public static async Task PrintSchedule(TelegramBotClient bot, long chatId, string groupName)
+        {
+            var schedule = ScheduleCreator.CreateScheduleByName(groupName, DateTime.Now);
+            await bot.SendTextMessageAsync(chatId, "Держи расписание, мне не жалко");
+            await bot.SendTextMessageAsync(chatId, schedule.ToString());
+        }
+
         public static async Task PrintSchedule(TelegramBotClient bot, long chatId)
         {
             if (UserState.GetChatStatus(chatId) == UserState.Status.Registered)
             {
-                await bot.SendTextMessageAsync(chatId, "Держи расписание, мне не жалко");
-
-                //ScheduleCreator.CreateScheduleById(registeredUsers[chatId], DateTime.Now); //Если в листе хранятся id групп с сайта УрФУ 
-                var schedule = ScheduleCreator.CreateScheduleByName(UserState.GetChatGroupNumber(chatId), DateTime.Now);
-                await bot.SendTextMessageAsync(chatId, schedule.ToString());
+                await PrintSchedule(bot, chatId, UserState.GetChatGroupNumber(chatId));
             }
             else
             {
                 await bot.SendTextMessageAsync(chatId,
                     "Ты пока не зарегистрирован. " +
                     "Введи номер своей группы в формате \"МЕН-000000\"" +
-                    " если хочешь узнать расписание. " +
-                    "Или напиши /reg чтобы зарегистрироваться");
+                    " чтобы зарегистрироваться и узнать расписание");
+                    UserState.SetChatStatus(chatId, UserState.Status.WaitingGroupNumber);
             }
         }
 
@@ -65,7 +68,7 @@ namespace TelegramBot
             if (UserState.GetChatStatus(chatId) == UserState.Status.Registered)
             {
                 await bot.SendTextMessageAsync(chatId,
-                    "Я всё видел, ты уже зарегистрировался!" +
+                    "Я всё видел, ты уже зарегистрировался! " +
                     "Теперь ты можешь воспользоваться функцией /ds");
             }
             else

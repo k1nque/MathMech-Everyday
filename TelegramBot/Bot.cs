@@ -66,12 +66,16 @@ namespace TelegramBot
                     await MessageHandler.PrintVacantRooms(botClient, chatId);
                     break;
                 default:
-                    // либо авторизация, либо ошибка с отправлением сообщения пользователю "я не знаю такую команду"
                     // todo: text лежит в lowercase, а в списке большими буквами
                     if (UserState.GetChatStatus(chatId) == UserState.Status.WaitingGroupNumber
                         && Group.AllGroupNumbers.Contains(update.Message.Text))
                     {
                         await MessageHandler.SetGroupNumber(botClient, chatId, update.Message.Text);
+                    }
+                    else if (text.Split().Length == 2 && text.Split()[0] == "р" &&
+                             Group.AllGroupNumbers.Contains(update.Message.Text.Split()[1]))
+                    {
+                        await MessageHandler.PrintSchedule(botClient, chatId, update.Message.Text.Split()[1]);
                     }
                     else
                     {
