@@ -60,7 +60,16 @@ namespace TelegramBot
 
         public static async Task PrintVacantRooms(TelegramBotClient bot, long chatId)
         {
-            await bot.SendTextMessageAsync(chatId, "ъеъ");
+            var rooms = VacantRoomsFinder.FindVacant(DateTime.Now).ToList();
+            if (rooms.Count > 0)
+            {
+                await bot.SendTextMessageAsync(chatId, $"Занятые аудитории: {string.Join(", ", rooms)}");    
+            }
+            else
+            {
+                await bot.SendTextMessageAsync(chatId, "Все аудитории свободны");
+            }
+            
         }
 
         public static async Task Register(TelegramBotClient bot, long chatId)
