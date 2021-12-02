@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 
@@ -13,7 +14,10 @@ namespace Parser
 
         public override string ToString()
         {
-            var joiningList = new List<string> {Day.ToString()};
+            var joiningList = new List<string>
+            {
+                $"{CultureInfo.InvariantCulture.TextInfo.ToTitleCase(new CultureInfo("ru-RU").DateTimeFormat.GetDayName(Day))}:"
+            };
             joiningList.AddRange(Schedule
                 .Select(lesson => lesson.ToString()));
             return string.Join("\n", joiningList);
@@ -43,6 +47,8 @@ namespace Parser
         public override string ToString()
         {
             var joiningList = weekSchedule
+                .OrderBy(daySchedule => ((int) daySchedule.Day + 6) % 7) // monday first
+                .Take(6) // skip sunday
                 .Select(daySchedule => daySchedule.ToString());
             return string.Join("\n", joiningList);
         }
