@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
+using System.Text;
 
 namespace Parser
 {
@@ -24,7 +26,27 @@ namespace Parser
 
         public override string ToString()
         {
-            return string.Join(" ", new List<string> {Location, Teacher, Subject});
+            if (string.IsNullOrEmpty(Subject))
+                return default;
+
+            var result = new StringBuilder();
+            result.Append($"{Start:HH:mm}-{End:HH:mm} {Subject}");
+            var teacher = Teacher;
+            var isTeacherPresented = !string.IsNullOrEmpty(teacher);
+            var isLocationPresented = !string.IsNullOrEmpty(Location);
+            if (isTeacherPresented && teacher.StartsWith("Преподаватель: "))
+                teacher = teacher.Substring(15);
+
+            return isLocationPresented switch
+            {
+                true when isTeacherPresented =>
+                    result.Append($" ({Location}, {teacher})").ToString(),
+                true =>
+                    result.Append($" ({Location})").ToString(),
+                false when isTeacherPresented =>
+                    result.Append($" ({teacher})").ToString(),
+                _ => result.ToString()
+            };
         }
     }
 }
