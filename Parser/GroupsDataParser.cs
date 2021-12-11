@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Text.Json;
 using System.Text.Json.Serialization;
@@ -32,10 +33,20 @@ namespace Parser
         
         [JsonPropertyName("title")]
         public string Title { get; set; }
-        
-        public string GetJson(string instituteId = default) =>
-            new WebClient().DownloadString(Url + instituteId);
-        
+
+        public string GetJson(string instituteId = default)
+        {
+            var result = new WebClient().DownloadString(Url + instituteId);
+            
+            // fix for empty answers
+            if (result.Length <= 4)
+            {
+                return File.ReadAllText("groups.json");
+            }
+            File.WriteAllText("groups.json", result);
+            return result;
+        }
+
         public IEnumerable<GroupsDataParser> ParseJson(string json) =>
             JsonSerializer.Deserialize<IEnumerable<GroupsDataParser>>(json);
     }
