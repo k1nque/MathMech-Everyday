@@ -24,7 +24,7 @@ namespace Parser
 
         public override string ToString()
         {
-            return String.Join(" ", new List<string>() {Location, Teacher, Subject});
+            return string.Join(" ", new List<string> {Location, Teacher, Subject});
         }
     }
 }

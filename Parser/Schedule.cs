@@ -23,6 +23,7 @@ namespace Parser
     public class Schedule
     {
         private readonly List<DaySchedule> weekSchedule = new();
+        public IEnumerable<DaySchedule> WeekSchedule => weekSchedule;
 
         public Schedule()
         {
