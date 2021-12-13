@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Text;
 
 namespace Parser
@@ -27,7 +24,7 @@ namespace Parser
         public override string ToString()
         {
             if (string.IsNullOrEmpty(Subject))
-                return default;
+                return "";
 
             var result = new StringBuilder();
             result.Append($"{Start:HH:mm}-{End:HH:mm} {Subject}");
