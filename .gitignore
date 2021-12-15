@@ -44,4 +44,4 @@ bld/
 *.svclog
 *.scc
 
-*Secret.cs
+*Secret.json

@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Net;
 using System.Runtime.InteropServices;
+using System.Text.Json;
 using System.Threading;
 using NCron;
 using NCron.Fluent;
@@ -19,8 +21,8 @@ namespace MathMech_Everyday
         {
             var schedulingService = new SchedulingService();
             schedulingService.Daily().Run<ScheduleTasks>();
-
-            var bot = new Bot(Secret.BotToken);
+            var Secrets = JsonSerializer.Deserialize<dynamic>("Secret.json");
+            var bot = new Bot(Secrets["BotToken"]);
             bot.Start();
         }
     }
