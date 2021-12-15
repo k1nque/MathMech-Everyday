@@ -8,7 +8,6 @@ namespace TelegramBot
         public enum Status
         {
             NewChat,
-            WaitingForName,
             WaitingGroupNumber,
             Registered
         };

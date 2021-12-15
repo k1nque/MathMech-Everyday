@@ -20,7 +20,8 @@ namespace MathMech_Everyday
             var schedulingService = new SchedulingService();
             schedulingService.Daily().Run<ScheduleTasks>();
 
-            var bot = new Bot(Secret.BotToken);
+            //var bot = new Bot(Secret.BotToken);
+            var bot = new Bot("2104283130:AAH-kyJoKCZFT6crARvhLlZcum2lyhfRN3o");
             bot.Start();
         }
     }
