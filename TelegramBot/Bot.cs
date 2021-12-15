@@ -46,7 +46,7 @@ namespace TelegramBot
 
         async Task HandleUpdateAsync(ITelegramBotClient client, Update update, CancellationToken cancellationToken)
         {
-            await Task.Yield(); //делает методы асинхронным
+            await Task.Yield();
             if (update.Type != UpdateType.Message)
                 return;
             if (update.Message.Type != MessageType.Text)
@@ -59,16 +59,17 @@ namespace TelegramBot
             {
                 UserState.SetChatStatus(chatId, UserState.Status.NewChat);
             }
-
+            
             var messageHasBeenSet = false;
+            string answer = "";
+
             foreach (var possibleMessage in listOfPossibleMessge)
             {
                 foreach (var str in possibleMessage.textToCall)
                 {
                     if (text == str)
                     {
-                        var answer = possibleMessage.GetMessage(chatId);
-                        await MessageHandler.Print(botClient, chatId, answer);
+                        answer = possibleMessage.GetMessage(chatId);
                         messageHasBeenSet = true;
                         break;
                     }
@@ -77,48 +78,9 @@ namespace TelegramBot
             }
             if (!messageHasBeenSet) 
             {
-                var answer = (new OtherMessage(update.Message.Text)).GetMessage(chatId);
-                await MessageHandler.Print(botClient, chatId, answer);
+                answer = (new OtherMessage(update.Message.Text)).GetMessage(chatId);
             }
-            
-            //switch (text)
-            //{
-            //    //case "/start":
-            //    //    await MessageHandler.PrintStart(botClient, chatId);
-            //    //    break;
-            //    //case "/help":
-            //    //    await MessageHandler.PrintHelp(botClient, chatId);
-            //    //    break;
-            //    //case "/reg":
-            //    //    await MessageHandler.Register(botClient, chatId);
-            //    //    break;
-            //    //case ("/ds" or "расписание"):
-            //    //    await MessageHandler.PrintSchedule(botClient, chatId);
-            //    //    break;
-            //    //case "/busy":
-            //    //    await MessageHandler.PrintVacantRooms(botClient, chatId);
-            //    //    break;
-            //    default:
-            //        // todo: text лежит в lowercase, а в списке большими буквами
-            //        if (UserState.GetChatStatus(chatId) == UserState.Status.WaitingGroupNumber
-            //            && Group.AllGroupNumbers.Contains(update.Message.Text))
-            //        {
-            //            await MessageHandler.SetGroupNumber(botClient, chatId, update.Message.Text);
-            //        }
-            //        else if (text.Split().Length == 2 && text.Split()[0] == "р" &&
-            //                 Group.AllGroupNumbers.Contains(update.Message.Text.Split()[1]))
-            //        {
-            //            await MessageHandler.PrintSchedule(botClient, chatId, update.Message.Text.Split()[1]);
-            //        }
-            //        else
-            //        {
-            //            await client.SendTextMessageAsync(chatId,
-            //                "Я пока не знаю такой команды, проверь правильно ли введены данные");
-            //        }
-
-            //        break;
-                
-            //}
+            await MessageHandler.Print(botClient, chatId, answer);
         }
 
         public void Start()

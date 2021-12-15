@@ -14,8 +14,4 @@
       <ProjectReference Include="..\Parser\Parser.csproj" />
     </ItemGroup>
 
-    <ItemGroup>
-      <Folder Include="MessageHandler" />
-    </ItemGroup>
-
 </Project>
