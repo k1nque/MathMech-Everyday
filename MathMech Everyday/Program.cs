@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Net;
 using System.Runtime.InteropServices;
 using System.Text.Json;
@@ -18,13 +19,33 @@ namespace MathMech_Everyday
 {
     class Program
     {
+        private const string SecretsFilename = "secrets.json";
+
+        private static string GetBotToken()
+        {
+            if (!File.Exists(SecretsFilename))
+            {
+                return null;
+            }
+
+            var secrets = JsonSerializer.Deserialize<Dictionary<string, string>>(
+                File.ReadAllText(SecretsFilename));
+            return secrets?["BotToken"];
+        }
+
         static void Main(string[] args)
         {
-            var secrets = JsonSerializer.Deserialize<dynamic>("secrets.json");
+            var botToken = GetBotToken();
+            if (botToken is null)
+            {
+                Console.Error.WriteLine("BotToken not found in secrets.json");
+                return;
+            }
+
             var container = new StandardKernel();
 
             container.Bind<string>()
-                .ToConstant(secrets["BotToken"])
+                .ToConstant(botToken)
                 .WhenInjectedInto<Bot>();
 
             container.Bind<Bot>()
@@ -35,12 +56,9 @@ namespace MathMech_Everyday
                 .ToSelf()
                 .OnActivation(s => s.Daily().Run<ScheduleTasks>());
 
-            //var schedulingService = new SchedulingService();
             var schedulingService = container.Get<SchedulingService>();
             schedulingService.Daily().Run<ScheduleTasks>();
-            //var bot = new Bot(Secrets["BotToken"]);
             var bot = container.Get<Bot>();
-            //bot.Start();
         }
     }
 }
