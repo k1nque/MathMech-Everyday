@@ -11,6 +11,7 @@ using NCron.Fluent.Generics;
 using NCron.Service;
 using Parser.ScheduleTasks;
 using TelegramBot;
+using Ninject;
 
 
 namespace MathMech_Everyday
@@ -19,11 +20,27 @@ namespace MathMech_Everyday
     {
         static void Main(string[] args)
         {
-            var schedulingService = new SchedulingService();
+            var secrets = JsonSerializer.Deserialize<dynamic>("secrets.json");
+            var container = new StandardKernel();
+
+            container.Bind<string>()
+                .ToConstant(secrets["BotToken"])
+                .WhenInjectedInto<Bot>();
+
+            container.Bind<Bot>()
+                .ToSelf()
+                .OnActivation(b => b.Start());
+
+            container.Bind<SchedulingService>()
+                .ToSelf()
+                .OnActivation(s => s.Daily().Run<ScheduleTasks>());
+
+            //var schedulingService = new SchedulingService();
+            var schedulingService = container.Get<SchedulingService>();
             schedulingService.Daily().Run<ScheduleTasks>();
-            var Secrets = JsonSerializer.Deserialize<dynamic>("Secret.json");
-            var bot = new Bot(Secrets["BotToken"]);
-            bot.Start();
+            //var bot = new Bot(Secrets["BotToken"]);
+            var bot = container.Get<Bot>();
+            //bot.Start();
         }
     }
 }
