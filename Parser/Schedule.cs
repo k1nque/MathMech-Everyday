@@ -14,9 +14,10 @@ namespace Parser
 
         public override string ToString()
         {
+            var dayName = new CultureInfo("ru-RU").DateTimeFormat.GetDayName(Day);
             var joiningList = new List<string>
             {
-                $"{CultureInfo.InvariantCulture.TextInfo.ToTitleCase(new CultureInfo("ru-RU").DateTimeFormat.GetDayName(Day))}:"
+                $"{CultureInfo.InvariantCulture.TextInfo.ToTitleCase(dayName)}:"
             };
             joiningList.AddRange(Schedule
                 .Select(lesson => lesson.ToString()));
@@ -27,6 +28,7 @@ namespace Parser
     public class Schedule
     {
         private readonly List<DaySchedule> weekSchedule = new();
+        public IEnumerable<DaySchedule> WeekSchedule => weekSchedule;
 
         public Schedule()
         {

@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
 using System.Text;
 
 namespace Parser
@@ -27,32 +24,26 @@ namespace Parser
         public override string ToString()
         {
             if (string.IsNullOrEmpty(Subject))
-            {
                 return "";
-            }
 
             var result = new StringBuilder();
-            result.Append($"{Start.ToString("HH:mm")}-{End.ToString("HH:mm")} {Subject}");
+            result.Append($"{Start:HH:mm}-{End:HH:mm} {Subject}");
             var teacher = Teacher;
-            if (!string.IsNullOrEmpty(teacher) && teacher.StartsWith("Преподаватель: "))
-            {
+            var isTeacherPresented = !string.IsNullOrEmpty(teacher);
+            var isLocationPresented = !string.IsNullOrEmpty(Location);
+            if (isTeacherPresented && teacher.StartsWith("Преподаватель: "))
                 teacher = teacher.Substring(15);
-            }
 
-            if (!string.IsNullOrEmpty(Location) && !string.IsNullOrEmpty(teacher))
+            return isLocationPresented switch
             {
-                result.Append($" ({Location}, {teacher})");
-            }
-            else if (!string.IsNullOrEmpty(Location))
-            {
-                result.Append($" ({Location})");
-            }
-            else if (!string.IsNullOrEmpty(teacher))
-            {
-                result.Append($" ({teacher})");
-            }
-
-            return result.ToString();
+                true when isTeacherPresented =>
+                    result.Append($" ({Location}, {teacher})").ToString(),
+                true =>
+                    result.Append($" ({Location})").ToString(),
+                false when isTeacherPresented =>
+                    result.Append($" ({teacher})").ToString(),
+                _ => result.ToString()
+            };
         }
     }
 }

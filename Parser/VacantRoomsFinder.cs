@@ -4,29 +4,42 @@ using System.Linq;
 
 namespace Parser
 {
-    public static class VacantRoomsFinder
+    public class VacantRoomsFinder
     {
-        private static IEnumerable<DaySchedule> GetGroupsDaySchedules(
-            IEnumerable<string> groupsId, DateTime dateTime) =>
-            groupsId.Select(id => ScheduleCreator.CreateScheduleById(id, dateTime)
-                .GetDaySchedule(dateTime.DayOfWeek));
+        private readonly IScheduleCreator scheduleCreator;
+        private readonly IGroupIdFinder groupIdFinder;
+        public VacantRoomsFinder(IScheduleCreator creator, IGroupIdFinder finder)
+        {
+            scheduleCreator = creator;
+            groupIdFinder = finder;
+        }
+        
+        private IEnumerable<DaySchedule> GetGroupsDaySchedules(IEnumerable<string> groupsId,
+            DateTime dayToGet)
+        {
+            var schedules = groupsId
+                .Select(id => scheduleCreator.CreateScheduleById(id, dayToGet));
+            var daySchedules = schedules
+                .Select(schedule => schedule.GetDaySchedule(dayToGet.DayOfWeek));
+            return daySchedules;
+        }
 
         private static IEnumerable<Lesson> GetLessonsAtTime(
-            IEnumerable<DaySchedule> groupsDaySchedule, DateTime dateTime) =>
+            IEnumerable<DaySchedule> groupsDaySchedule, DateTime timeToGet) =>
             groupsDaySchedule
                 .SelectMany(daySchedule => daySchedule.Schedule
-                    .Where(lesson => lesson.Location != null)
-                    .Where(lesson => lesson.Start <= dateTime && dateTime <= lesson.End));
-        
+                    .Where(lesson => lesson.Location != null &&
+                                     lesson.Start <= timeToGet && timeToGet <= lesson.End));
+
         private static IEnumerable<string> GetLessonsRooms(IEnumerable<Lesson> lessons) =>
             lessons.Select(lesson => lesson.Location).Distinct();
         
-        public static IEnumerable<string> FindVacant(DateTime dateTime)
+        public IEnumerable<string> FindVacant(DateTime timeToFind)
         {
             var instituteIds = new List<string> {"25714", "25713"};
-            var groupsIds = GroupIdFinder.FindInstituteGroupsId(instituteIds);
-            var groupsSchedule = GetGroupsDaySchedules(groupsIds, dateTime);
-            var lessons = GetLessonsAtTime(groupsSchedule, dateTime);
+            var groupsIds = groupIdFinder.ExtractInstituteGroupsId(instituteIds);
+            var groupsSchedule = GetGroupsDaySchedules(groupsIds, timeToFind);
+            var lessons = GetLessonsAtTime(groupsSchedule, timeToFind);
             return GetLessonsRooms(lessons);
         }
     }
