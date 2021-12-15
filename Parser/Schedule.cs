@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 
 
@@ -8,34 +9,48 @@ namespace Parser
     public class DaySchedule
     {
         public DayOfWeek Day { get; }
-        public List<Lesson> Schedule { get; } // TODO encapsulate
+        public List<Lesson> Schedule { get; } = new();
+        public DaySchedule(DayOfWeek day) => Day = day;
 
-        public DaySchedule(DayOfWeek day)
+        public override string ToString()
         {
-            Day = day;
-            Schedule = new List<Lesson>();
+            var joiningList = new List<string>
+            {
+                $"{CultureInfo.InvariantCulture.TextInfo.ToTitleCase(new CultureInfo("ru-RU").DateTimeFormat.GetDayName(Day))}:"
+            };
+            joiningList.AddRange(Schedule
+                .Select(lesson => lesson.ToString()));
+            return string.Join("\n", joiningList);
         }
     }
 
     public class Schedule
     {
-        public List<DaySchedule> WeekSchedule { get; } // TODO encapsulate
+        private readonly List<DaySchedule> weekSchedule = new();
 
         public Schedule()
         {
-            WeekSchedule = new List<DaySchedule>();
             var daysOfWeek = Enum.GetValues(typeof(DayOfWeek)).Cast<DayOfWeek>();
             foreach (var day in daysOfWeek)
-                WeekSchedule.Add(new DaySchedule(day));
+                weekSchedule.Add(new DaySchedule(day));
         }
 
         public void AddLesson(Lesson lesson, DayOfWeek day)
         {
-            var daySchedule = WeekSchedule.First(dS => dS.Day == day);
+            var daySchedule = weekSchedule.First(dS => dS.Day == day);
             daySchedule.Schedule.Add(lesson);
         }
 
         public DaySchedule GetDaySchedule(DayOfWeek day) =>
-            WeekSchedule.First(dS => dS.Day == day);
+            weekSchedule.First(dS => dS.Day == day);
+
+        public override string ToString()
+        {
+            var joiningList = weekSchedule
+                .OrderBy(daySchedule => ((int) daySchedule.Day + 6) % 7) // monday first
+                .Take(6) // skip sunday
+                .Select(daySchedule => daySchedule.ToString());
+            return string.Join("\n", joiningList);
+        }
     }
 }
