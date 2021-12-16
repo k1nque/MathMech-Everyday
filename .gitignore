@@ -45,3 +45,4 @@ bld/
 *.scc
 
 *.DS_Store
+*.DotSettings.user

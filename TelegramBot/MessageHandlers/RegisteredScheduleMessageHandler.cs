@@ -7,11 +7,12 @@ namespace TelegramBot.MessageHandlers
     {
         private UserState userState;
         private ScheduleMessageHandler scheduleMessageHandler;
-
-        public RegisteredScheduleMessageHandler(UserState userState, IScheduleCreator scheduleCreator)
+        
+        public RegisteredScheduleMessageHandler(UserState userState, 
+            IScheduleCreator scheduleCreator, IGroupIdFinder groupIdFinder)
         {
             this.userState = userState;
-            this.scheduleMessageHandler = new ScheduleMessageHandler(scheduleCreator);
+            this.scheduleMessageHandler = new ScheduleMessageHandler(scheduleCreator, groupIdFinder);
             Commands = new List<string>() {"/ds", "расписание", "р"};
         }
 

@@ -7,11 +7,13 @@ namespace TelegramBot.MessageHandlers
     public class ScheduleMessageHandler : MessageHandler
     {
         private IScheduleCreator scheduleCreator;
+        private IGroupIdFinder groupIdFinder;
         public string GroupName { get; set; }
 
-        public ScheduleMessageHandler(IScheduleCreator scheduleCreator)
+        public ScheduleMessageHandler(IScheduleCreator scheduleCreator, IGroupIdFinder groupIdFinder)
         {
             this.scheduleCreator = scheduleCreator;
+            this.groupIdFinder = groupIdFinder;
             Commands = new List<string>() {"расписание", "р"};
         }
 
@@ -19,7 +21,7 @@ namespace TelegramBot.MessageHandlers
         {
             var tokens = text.Split();
             var result = tokens.Length == 2 && Commands.Contains(tokens[0].ToLower())
-                                            && Groups.IsGroupNumber(tokens[1]);
+                                            && groupIdFinder.IsGroupNumber(tokens[1]);
             if (result) GroupName = tokens[1];
             return result;
         }

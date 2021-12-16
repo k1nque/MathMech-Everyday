@@ -22,11 +22,18 @@ namespace TelegramBot
         private VacantRoomsFinder vacantRoomsFinder;
         private List<MessageHandler> listOfPossibleMessageHandlers;
 
-        public Bot(string botToken)
+        public class Configuration
         {
-            botClient = new TelegramBotClient(botToken);
+            public string BotToken { get; set; }
+            public string AllGroupsFilename { get; set; }
+            public string MathMechGroupsFilename { get; set; }
+        }
+
+        public Bot(Configuration config)
+        {
+            botClient = new TelegramBotClient(config.BotToken);
             userState = new UserState();
-            groupIdFinder = new GroupIdFinder();
+            groupIdFinder = new GroupIdFinder(config.AllGroupsFilename, config.MathMechGroupsFilename);
             scheduleCreator = new ScheduleCreator(groupIdFinder);
             vacantRoomsFinder = new VacantRoomsFinder(scheduleCreator, groupIdFinder);
             listOfPossibleMessageHandlers = new List<MessageHandler>()
@@ -34,9 +41,9 @@ namespace TelegramBot
                 new StartMessageHandler(),
                 new HelpMessageHandler(),
                 new RegisterMessageHandler(userState),
-                new ScheduleMessageHandler(scheduleCreator),
-                new RegisteredScheduleMessageHandler(userState, scheduleCreator),
-                new GroupNumberMessageHandler(userState),
+                new ScheduleMessageHandler(scheduleCreator, groupIdFinder),
+                new RegisteredScheduleMessageHandler(userState, scheduleCreator, groupIdFinder),
+                new GroupNumberMessageHandler(userState, groupIdFinder),
                 new VacantRoomMessageHandler(vacantRoomsFinder),
                 new OtherMessageHandler()
             };

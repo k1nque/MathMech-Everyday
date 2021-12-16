@@ -13,4 +13,8 @@
     <Compile Remove="DetectGroupId.cs" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="GroupsData" />
+  </ItemGroup>
+
 </Project>

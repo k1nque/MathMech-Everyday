@@ -13,7 +13,7 @@ namespace Parser.ScheduleTasks
     {
         public override void Execute()
         {
-            SaveCache(VacantRoomsFinder.FindVacant(DateTime.Now));
+            // SaveCache(VacantRoomsFinder.FindVacant(DateTime.Now));
         }
 
         public void SaveCache(IEnumerable<string> cache)

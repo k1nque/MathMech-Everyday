@@ -1,18 +1,23 @@
+using Parser;
+
 namespace TelegramBot.MessageHandlers
 {
     public class GroupNumberMessageHandler : MessageHandler
     {
         private UserState userState;
+        private IGroupIdFinder groupIdFinder;
         private string groupNumber;
 
-        public GroupNumberMessageHandler(UserState userState)
+        public GroupNumberMessageHandler(UserState userState, IGroupIdFinder groupIdFinder)
         {
             this.userState = userState;
+            this.groupIdFinder = groupIdFinder;
         }
 
         public override bool CheckMessage(long chatId, string text)
         {
-            var result = userState.GetChatStatus(chatId) == UserStatus.WaitingGroupNumber && Groups.IsGroupNumber(text);
+            var result = userState.GetChatStatus(chatId) == UserStatus.WaitingGroupNumber 
+                         && groupIdFinder.IsGroupNumber(text);
             if (result) groupNumber = text;
             return result;
         }

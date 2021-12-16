@@ -12,38 +12,33 @@ namespace Parser
     internal class GroupsDataParser
     {
         private const string Url = "https://urfu.ru/api/schedule/groups/";
-        
-        [JsonPropertyName("external_id")]
-        public int ExternalId { get; set; }
-        
-        [JsonPropertyName("actual")]
-        public bool Actual { get; set; }
-        
-        [JsonPropertyName("course")]
-        public int Course { get; set; }
-        
-        [JsonPropertyName("updated")]
-        public bool Updated { get; set; }
-        
-        [JsonPropertyName("id")]
-        public int Id { get; set; }
-        
-        [JsonPropertyName("institute_id")]
-        public int InstituteId { get; set; }
-        
-        [JsonPropertyName("title")]
-        public string Title { get; set; }
+        public string GroupsFilename { get; set; }
+
+        [JsonPropertyName("external_id")] public int ExternalId { get; set; }
+
+        [JsonPropertyName("actual")] public bool Actual { get; set; }
+
+        [JsonPropertyName("course")] public int Course { get; set; }
+
+        [JsonPropertyName("updated")] public bool Updated { get; set; }
+
+        [JsonPropertyName("id")] public int Id { get; set; }
+
+        [JsonPropertyName("institute_id")] public int InstituteId { get; set; }
+
+        [JsonPropertyName("title")] public string Title { get; set; }
 
         public string GetJson(string instituteId = default)
         {
             var result = new WebClient().DownloadString(Url + instituteId);
-            
+
             // fix for empty answers
             if (result.Length <= 4)
             {
-                return File.ReadAllText("groups.json");
+                return File.ReadAllText(GroupsFilename);
             }
-            File.WriteAllText("groups.json", result);
+
+            File.WriteAllText(GroupsFilename, result);
             return result;
         }
 

@@ -1,12 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Net;
-using System.Runtime.InteropServices;
 using System.Text.Json;
-using System.Threading;
-using NCron;
-using NCron.Fluent;
 using NCron.Fluent.Crontab;
 using NCron.Fluent.Generics;
 using NCron.Service;
@@ -19,17 +14,15 @@ namespace MathMech_Everyday
 {
     class Program
     {
-        private const string SecretsFilename = "secrets.json";
-
         private static string GetBotToken()
         {
-            if (!File.Exists(SecretsFilename))
+            if (!File.Exists(Config.SecretsFilename))
             {
                 return null;
             }
 
             var secrets = JsonSerializer.Deserialize<Dictionary<string, string>>(
-                File.ReadAllText(SecretsFilename));
+                File.ReadAllText(Config.SecretsFilename));
             return secrets?["BotToken"];
         }
 
@@ -38,14 +31,18 @@ namespace MathMech_Everyday
             var botToken = GetBotToken();
             if (botToken is null)
             {
-                Console.Error.WriteLine("BotToken not found in secrets.json");
-                return;
+                Console.Error.WriteLine($"BotToken not found in {Config.SecretsFilename}");
+                Environment.Exit(1);
             }
 
             var container = new StandardKernel();
+            var botConfig = new Bot.Configuration();
+            botConfig.BotToken = botToken;
+            botConfig.AllGroupsFilename = Config.AllGroupsFilename;
+            botConfig.MathMechGroupsFilename = Config.MathMechGroupsFilename;
 
-            container.Bind<string>()
-                .ToConstant(botToken)
+            container.Bind<Bot.Configuration>()
+                .ToConstant(botConfig)
                 .WhenInjectedInto<Bot>();
 
             container.Bind<Bot>()
@@ -58,7 +55,7 @@ namespace MathMech_Everyday
 
             var schedulingService = container.Get<SchedulingService>();
             schedulingService.Daily().Run<ScheduleTasks>();
-            var bot = container.Get<Bot>();
+            container.Get<Bot>();
         }
     }
 }

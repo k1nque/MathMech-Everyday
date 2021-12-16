@@ -1,13 +1,38 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.Json;
 
 namespace Parser
 {
-    public class GroupIdFinder: IGroupIdFinder
+    public class GroupIdFinder : IGroupIdFinder
     {
-        private readonly GroupsDataParser parser = new();
-        
+        private GroupsDataParser parser = new();
+        private HashSet<string> MathMechGroups { get; }
+
+        public bool IsGroupNumber(string text)
+        {
+            return MathMechGroups.Contains(text);
+        }
+
+        public GroupIdFinder(string allGroupsFilename, string mathMechGroupsFilename)
+        {
+            parser.GroupsFilename = allGroupsFilename;
+            if (File.Exists(mathMechGroupsFilename))
+            {
+                var groups = JsonSerializer.Deserialize<List<string>>(File.ReadAllText(mathMechGroupsFilename));
+                if (groups is not null)
+                {
+                    MathMechGroups = groups.ToHashSet();
+                    return;
+                }
+            }
+
+            Console.Error.WriteLine($"{mathMechGroupsFilename} not found or corrupted");
+            Environment.Exit(1);
+        }
+
         public string FindGroupId(string groupName)
         {
             var json = parser.GetJson();
@@ -15,20 +40,12 @@ namespace Parser
                 .Where(property => property.Title == groupName.ToUpper());
             return properties.First().Id.ToString();
         }
-        
+
         private IEnumerable<GroupsDataParser> SelectMathMechGroups(IEnumerable<GroupsDataParser> properties)
         {
-            var groups = GetGroups("MathMech.txt");
-            return properties.Where(p => groups.Contains(p.Title));
+            return properties.Where(p => MathMechGroups.Contains(p.Title));
         }
 
-        private HashSet<string> GetGroups(string fileName)
-        {
-            var folderPath = Path.GetFullPath(@"..\..\..\..\Parser\GroupsData\");
-            var data = File.ReadLines(folderPath + fileName);
-            return data.ToHashSet();
-        }
-        
         public IEnumerable<string> ExtractInstituteGroupsId(IEnumerable<string> institutesIds)
         {
             foreach (var id in institutesIds)
