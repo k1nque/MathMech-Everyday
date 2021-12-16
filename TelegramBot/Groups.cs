@@ -1,8 +1,15 @@
+using System.Linq;
+
 namespace TelegramBot
 {
-    public class Group
+    public class Groups
     {
         // todo: брать список из кешированного groups.json 
+        public static bool IsGroupNumber(string text)
+        {
+            return AllGroupNumbers.Contains(text);
+        }
+        
         public static string[] AllGroupNumbers = new[]
         {
             "МЕН-110101", "МЕН-110102", "МЕН-110201", "МЕН-110206", "МЕН-110207", "МЕН-110208", "МЕН-110301",

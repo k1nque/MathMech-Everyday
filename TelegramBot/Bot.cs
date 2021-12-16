@@ -1,12 +1,14 @@
 ﻿using System;
-using System.Linq;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
+using Parser;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Extensions.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using TelegramBot.MessageHandlers;
 
 
 namespace TelegramBot
@@ -14,13 +16,34 @@ namespace TelegramBot
     public class Bot
     {
         private TelegramBotClient botClient;
+        private UserState userState;
+        private IGroupIdFinder groupIdFinder;
+        private IScheduleCreator scheduleCreator;
+        private VacantRoomsFinder vacantRoomsFinder;
+        private List<MessageHandler> listOfPossibleMessageHandlers;
 
         public Bot(string botToken)
         {
-            this.botClient = new TelegramBotClient(botToken);
+            botClient = new TelegramBotClient(botToken);
+            userState = new UserState();
+            groupIdFinder = new GroupIdFinder();
+            scheduleCreator = new ScheduleCreator(groupIdFinder);
+            vacantRoomsFinder = new VacantRoomsFinder(scheduleCreator, groupIdFinder);
+            listOfPossibleMessageHandlers = new List<MessageHandler>()
+            {
+                new StartMessageHandler(),
+                new HelpMessageHandler(),
+                new RegisterMessageHandler(userState),
+                new ScheduleMessageHandler(scheduleCreator),
+                new RegisteredScheduleMessageHandler(userState, scheduleCreator),
+                new GroupNumberMessageHandler(userState),
+                new VacantRoomMessageHandler(vacantRoomsFinder),
+                new OtherMessageHandler()
+            };
         }
 
-        Task HandleErrorAsync(ITelegramBotClient client, Exception exception, CancellationToken cancellationToken)
+        private Task HandleErrorAsync(ITelegramBotClient client, Exception exception,
+            CancellationToken cancellationToken)
         {
             var errorMessage = exception switch
             {
@@ -29,61 +52,33 @@ namespace TelegramBot
                 _ => exception.ToString()
             };
 
-            Console.WriteLine(errorMessage);
+            Console.Error.WriteLine(errorMessage);
             return Task.CompletedTask;
         }
 
-        async Task HandleUpdateAsync(ITelegramBotClient client, Update update, CancellationToken cancellationToken)
+        private async Task HandleUpdateAsync(ITelegramBotClient client, Update update,
+            CancellationToken cancellationToken)
         {
-            if (update.Type != UpdateType.Message)
-                return;
-            if (update.Message.Type != MessageType.Text)
+            if (update.Type != UpdateType.Message || update.Message.Type != MessageType.Text
+                                                  || string.IsNullOrEmpty(update.Message.Text))
                 return;
 
-            var text = update.Message.Text.ToLower();
+            var text = update.Message.Text;
             var chatId = update.Message.Chat.Id;
 
-            if (UserState.GetChatStatus(chatId) == null)
+            if (userState.GetChatStatus(chatId) == null)
             {
-                UserState.SetChatStatus(chatId, UserState.Status.NewChat);
+                userState.SetChatStatus(chatId, UserStatus.NewChat);
             }
 
-            switch (text)
+            foreach (var messageHandler in listOfPossibleMessageHandlers)
             {
-                case "/start":
-                    await MessageHandler.PrintStart(botClient, chatId);
+                if (messageHandler.CheckMessage(chatId, text))
+                {
+                    var answer = messageHandler.GetMessage(chatId);
+                    await botClient.SendTextMessageAsync(chatId, answer, cancellationToken: cancellationToken);
                     break;
-                case "/help":
-                    await MessageHandler.PrintHelp(botClient, chatId);
-                    break;
-                case "/reg":
-                    await MessageHandler.Register(botClient, chatId);
-                    break;
-                case ("/ds" or "расписание"):
-                    await MessageHandler.PrintSchedule(botClient, chatId);
-                    break;
-                case "/busy":
-                    await MessageHandler.PrintVacantRooms(botClient, chatId);
-                    break;
-                default:
-                    // todo: text лежит в lowercase, а в списке большими буквами
-                    if (UserState.GetChatStatus(chatId) == UserState.Status.WaitingGroupNumber
-                        && Group.AllGroupNumbers.Contains(update.Message.Text))
-                    {
-                        await MessageHandler.SetGroupNumber(botClient, chatId, update.Message.Text);
-                    }
-                    else if (text.Split().Length == 2 && text.Split()[0] == "р" &&
-                             Group.AllGroupNumbers.Contains(update.Message.Text.Split()[1]))
-                    {
-                        await MessageHandler.PrintSchedule(botClient, chatId, update.Message.Text.Split()[1]);
-                    }
-                    else
-                    {
-                        await client.SendTextMessageAsync(chatId,
-                            "Я пока не знаю такой команды, проверь правильно ли введены данные");
-                    }
-
-                    break;
+                }
             }
         }
 
