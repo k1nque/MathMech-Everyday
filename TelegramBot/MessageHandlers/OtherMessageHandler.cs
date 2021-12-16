@@ -1,3 +1,5 @@
+using System.Threading.Tasks;
+
 namespace TelegramBot.MessageHandlers
 {
     public class OtherMessageHandler : MessageHandler
@@ -11,7 +13,7 @@ namespace TelegramBot.MessageHandlers
             return true;
         }
 
-        public override string GetMessage(long chatId)
+        public override async Task<string> GetMessage(long chatId)
         {
             return "Я пока не знаю такой команды, проверь правильно ли введены данные";
         }

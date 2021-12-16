@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace TelegramBot.MessageHandlers
 {
@@ -12,7 +13,7 @@ namespace TelegramBot.MessageHandlers
             Commands = new List<string>() {"/reg"};
         }
 
-        public override string GetMessage(long chatId)
+        public override async Task<string> GetMessage(long chatId)
         {
             if (userState.GetChatStatus(chatId) == UserStatus.Registered)
             {

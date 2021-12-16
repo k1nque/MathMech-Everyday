@@ -1,11 +1,12 @@
 ﻿using System;
+using System.Threading.Tasks;
 
 namespace Parser
 {
     public interface IScheduleCreator
     {
-        Schedule CreateScheduleById(string groupId, DateTime time);
+        Task<Schedule> CreateScheduleById(string groupId, DateTime time);
 
-        Schedule CreateScheduleByName(string groupName, DateTime time);
+        Task<Schedule> CreateScheduleByName(string groupName, DateTime time);
     }
 }

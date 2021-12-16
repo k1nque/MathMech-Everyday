@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace Parser
 {
@@ -8,17 +9,19 @@ namespace Parser
     {
         private readonly IScheduleCreator scheduleCreator;
         private readonly IGroupIdFinder groupIdFinder;
+
         public VacantRoomsFinder(IScheduleCreator creator, IGroupIdFinder finder)
         {
             scheduleCreator = creator;
             groupIdFinder = finder;
         }
-        
-        private IEnumerable<DaySchedule> GetGroupsDaySchedules(IEnumerable<string> groupsId,
+
+        private async Task<IEnumerable<DaySchedule>> GetGroupsDaySchedules(IEnumerable<string> groupsId,
             DateTime dayToGet)
         {
-            var schedules = groupsId
+            var schedulesTasks = groupsId
                 .Select(id => scheduleCreator.CreateScheduleById(id, dayToGet));
+            var schedules = await Task.WhenAll(schedulesTasks);
             var daySchedules = schedules
                 .Select(schedule => schedule.GetDaySchedule(dayToGet.DayOfWeek));
             return daySchedules;
@@ -33,12 +36,12 @@ namespace Parser
 
         private static IEnumerable<string> GetLessonsRooms(IEnumerable<Lesson> lessons) =>
             lessons.Select(lesson => lesson.Location).Distinct();
-        
-        public IEnumerable<string> FindVacant(DateTime timeToFind)
+
+        public async Task<IEnumerable<string>> FindVacant(DateTime timeToFind)
         {
             var instituteIds = new List<string> {"25714", "25713"};
             var groupsIds = groupIdFinder.ExtractInstituteGroupsId(instituteIds);
-            var groupsSchedule = GetGroupsDaySchedules(groupsIds, timeToFind);
+            var groupsSchedule = await GetGroupsDaySchedules(groupsIds, timeToFind);
             var lessons = GetLessonsAtTime(groupsSchedule, timeToFind);
             return GetLessonsRooms(lessons);
         }

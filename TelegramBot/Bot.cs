@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using Parser;
@@ -78,14 +79,12 @@ namespace TelegramBot
                 userState.SetChatStatus(chatId, UserStatus.NewChat);
             }
 
-            foreach (var messageHandler in listOfPossibleMessageHandlers)
+            foreach (var messageHandler in listOfPossibleMessageHandlers.Where(
+                         messageHandler => messageHandler.CheckMessage(chatId, text)))
             {
-                if (messageHandler.CheckMessage(chatId, text))
-                {
-                    var answer = messageHandler.GetMessage(chatId);
-                    await botClient.SendTextMessageAsync(chatId, answer, cancellationToken: cancellationToken);
-                    break;
-                }
+                var answer = await messageHandler.GetMessage(chatId);
+                await botClient.SendTextMessageAsync(chatId, answer, cancellationToken: cancellationToken);
+                break;
             }
         }
 

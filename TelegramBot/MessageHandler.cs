@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace TelegramBot
 {
@@ -6,7 +7,7 @@ namespace TelegramBot
     {
         protected List<string> Commands = new List<string>();
 
-        public abstract string GetMessage(long chatId);
+        public abstract Task<string> GetMessage(long chatId);
 
         public virtual bool CheckMessage(long chatId, string text)
         {

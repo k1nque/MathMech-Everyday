@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using Parser;
 
 namespace TelegramBot.MessageHandlers
@@ -15,15 +16,10 @@ namespace TelegramBot.MessageHandlers
             Commands = new List<string>() {"/busy"};
         }
 
-        public override string GetMessage(long chatId)
+        public override async Task<string> GetMessage(long chatId)
         {
-            var rooms = vacantRoomsFinder.FindVacant(DateTime.Now).ToList();
-            if (rooms.Count > 0)
-            {
-                return $"Занятые аудитории: {string.Join(", ", rooms)}";
-            }
-
-            return "Все аудитории свободны";
+            var rooms = (await vacantRoomsFinder.FindVacant(DateTime.Now)).ToList();
+            return rooms.Count > 0 ? $"Занятые аудитории: {string.Join(", ", rooms)}" : "Все аудитории свободны";
         }
     }
 }

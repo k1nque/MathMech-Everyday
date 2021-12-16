@@ -1,3 +1,4 @@
+using System.Threading.Tasks;
 using Parser;
 
 namespace TelegramBot.MessageHandlers
@@ -22,7 +23,7 @@ namespace TelegramBot.MessageHandlers
             return result;
         }
 
-        public override string GetMessage(long chatId)
+        public override async Task<string> GetMessage(long chatId)
         {
             userState.SetChatStatus(chatId, UserStatus.Registered);
             userState.SetChatGroupNumber(chatId, groupNumber);

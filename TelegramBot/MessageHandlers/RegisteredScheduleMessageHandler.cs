@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Parser;
 
 namespace TelegramBot.MessageHandlers
@@ -22,12 +23,12 @@ namespace TelegramBot.MessageHandlers
             return tokens.Length == 1 && Commands.Contains(tokens[0].ToLower());
         }
 
-        public override string GetMessage(long chatId)
+        public override async Task<string> GetMessage(long chatId)
         {
             if (userState.GetChatStatus(chatId) == UserStatus.Registered)
             {
                 scheduleMessageHandler.GroupName = userState.GetChatGroupNumber(chatId);
-                return scheduleMessageHandler.GetMessage(chatId);
+                return await scheduleMessageHandler.GetMessage(chatId);
             }
 
             userState.SetChatStatus(chatId, UserStatus.WaitingGroupNumber);

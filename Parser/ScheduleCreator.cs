@@ -2,17 +2,18 @@
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
+using System.Threading.Tasks;
 using Ical.Net;
 using Ical.Net.CalendarComponents;
 using static System.Globalization.CultureInfo;
 
 namespace Parser
 {
-    public class ScheduleCreator: IScheduleCreator
+    public class ScheduleCreator : IScheduleCreator
     {
         private readonly IGroupIdFinder groupIdFinder;
         public ScheduleCreator(IGroupIdFinder finder) => groupIdFinder = finder;
-        
+
         private int GetWeekOfYear(CalendarEvent calEvent) =>
             InvariantCulture.Calendar.GetWeekOfYear(
                 calEvent.DtStart.Date, CalendarWeekRule.FirstDay, DayOfWeek.Sunday);
@@ -36,9 +37,10 @@ namespace Parser
                 );
                 schedule.AddLesson(lesson, calendarEvent.DtStart.DayOfWeek);
             }
+
             return schedule;
         }
-        
+
         private Schedule ParseCalendar(ICalendarObject calendar)
         {
             var schedule = new Schedule();
@@ -52,16 +54,16 @@ namespace Parser
             return CreateSchedule(calendarChildren, firstEventWeek);
         }
 
-        public Schedule CreateScheduleById(string groupId, DateTime time)
+        public async Task<Schedule> CreateScheduleById(string groupId, DateTime time)
         {
-            var calendar = new CalendarCreator().GetCalendar(groupId, time);
+            var calendar = await new CalendarCreator().GetCalendar(groupId, time);
             return ParseCalendar(calendar);
         }
 
-        public Schedule CreateScheduleByName(string groupName, DateTime time)
+        public async Task<Schedule> CreateScheduleByName(string groupName, DateTime time)
         {
             var id = groupIdFinder.FindGroupId(groupName);
-            return CreateScheduleById(id, time);
+            return await CreateScheduleById(id, time);
         }
     }
 }

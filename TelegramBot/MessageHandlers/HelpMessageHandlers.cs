@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace TelegramBot.MessageHandlers
 {
@@ -9,7 +10,7 @@ namespace TelegramBot.MessageHandlers
             Commands = new List<string>() {"/help"};
         }
 
-        public override string GetMessage(long chatId)
+        public override async Task<string> GetMessage(long chatId)
         {
             return "\n/reg чтобы зарегистрироваться и быстро получать расписание" +
                    "\n/ds или слово \"расписание\" - и я покажу тебе твоё расписание на сегодня" +

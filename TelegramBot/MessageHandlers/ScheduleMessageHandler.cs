@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using Parser;
 
 namespace TelegramBot.MessageHandlers
@@ -26,9 +27,9 @@ namespace TelegramBot.MessageHandlers
             return result;
         }
 
-        public override string GetMessage(long chatId)
+        public override async Task<string> GetMessage(long chatId)
         {
-            var schedule = scheduleCreator.CreateScheduleByName(GroupName, DateTime.Now);
+            var schedule = await scheduleCreator.CreateScheduleByName(GroupName, DateTime.Now);
             return $"Держи расписание, мне не жалко\n{schedule.ToString()}";
         }
     }
