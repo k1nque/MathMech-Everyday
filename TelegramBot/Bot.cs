@@ -17,7 +17,7 @@ namespace TelegramBot
     public class Bot
     {
         private TelegramBotClient botClient;
-        private UserState userState;
+        private IUserState userState;
         private IGroupIdFinder groupIdFinder;
         private IScheduleCreator scheduleCreator;
         private VacantRoomsFinder vacantRoomsFinder;
@@ -28,18 +28,19 @@ namespace TelegramBot
             public string BotToken { get; set; }
             public string AllGroupsFilename { get; set; }
             public string MathMechGroupsFilename { get; set; }
+            public string ChatDatabaseFilename { get; set; }
         }
 
         public Bot(Configuration config)
         {
             botClient = new TelegramBotClient(config.BotToken);
-            userState = new UserState();
+            userState = new UserState(config.ChatDatabaseFilename);
             groupIdFinder = new GroupIdFinder(config.AllGroupsFilename, config.MathMechGroupsFilename);
             scheduleCreator = new ScheduleCreator(groupIdFinder);
             vacantRoomsFinder = new VacantRoomsFinder(scheduleCreator, groupIdFinder);
             listOfPossibleMessageHandlers = new List<MessageHandler>()
             {
-                new StartMessageHandler(),
+                new StartMessageHandler(userState),
                 new HelpMessageHandler(),
                 new RegisterMessageHandler(userState),
                 new ScheduleMessageHandler(scheduleCreator, groupIdFinder),
@@ -76,7 +77,7 @@ namespace TelegramBot
 
             if (userState.GetChatStatus(chatId) == null)
             {
-                userState.SetChatStatus(chatId, UserStatus.NewChat);
+                userState.SetChatInfo(chatId, UserStatus.NewChat);
             }
 
             foreach (var messageHandler in listOfPossibleMessageHandlers.Where(

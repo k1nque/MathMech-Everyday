@@ -5,11 +5,11 @@ namespace TelegramBot.MessageHandlers
 {
     public class GroupNumberMessageHandler : MessageHandler
     {
-        private UserState userState;
+        private IUserState userState;
         private IGroupIdFinder groupIdFinder;
         private string groupNumber;
 
-        public GroupNumberMessageHandler(UserState userState, IGroupIdFinder groupIdFinder)
+        public GroupNumberMessageHandler(IUserState userState, IGroupIdFinder groupIdFinder)
         {
             this.userState = userState;
             this.groupIdFinder = groupIdFinder;
@@ -25,8 +25,7 @@ namespace TelegramBot.MessageHandlers
 
         public override async Task<string> GetMessage(long chatId)
         {
-            userState.SetChatStatus(chatId, UserStatus.Registered);
-            userState.SetChatGroupNumber(chatId, groupNumber);
+            userState.SetChatInfo(chatId, UserStatus.Registered, groupNumber);
             return "Прекрасно, теперь ты можешь получать расписание своей группы просто" +
                    "написав слово \"расписание\" или вызвать команду /ds";
         }

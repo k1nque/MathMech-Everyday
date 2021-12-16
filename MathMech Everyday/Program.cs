@@ -40,6 +40,7 @@ namespace MathMech_Everyday
             botConfig.BotToken = botToken;
             botConfig.AllGroupsFilename = Config.AllGroupsFilename;
             botConfig.MathMechGroupsFilename = Config.MathMechGroupsFilename;
+            botConfig.ChatDatabaseFilename = Config.ChatDatabaseFilename;
 
             container.Bind<Bot.Configuration>()
                 .ToConstant(botConfig)

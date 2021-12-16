@@ -6,10 +6,10 @@ namespace TelegramBot.MessageHandlers
 {
     public class RegisteredScheduleMessageHandler : MessageHandler
     {
-        private UserState userState;
+        private IUserState userState;
         private ScheduleMessageHandler scheduleMessageHandler;
-        
-        public RegisteredScheduleMessageHandler(UserState userState, 
+
+        public RegisteredScheduleMessageHandler(IUserState userState,
             IScheduleCreator scheduleCreator, IGroupIdFinder groupIdFinder)
         {
             this.userState = userState;
@@ -32,7 +32,7 @@ namespace TelegramBot.MessageHandlers
                 return await scheduleMessageHandler.GetMessage(chatId);
             }
 
-            userState.SetChatStatus(chatId, UserStatus.WaitingGroupNumber);
+            userState.SetChatInfo(chatId, UserStatus.WaitingGroupNumber);
             return "Ты пока не зарегистрирован. " +
                    "Введи номер своей группы в формате \"МЕН-000000\"" +
                    " чтобы зарегистрироваться и узнать расписание";

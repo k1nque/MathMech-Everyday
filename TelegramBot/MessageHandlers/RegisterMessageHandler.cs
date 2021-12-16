@@ -5,9 +5,9 @@ namespace TelegramBot.MessageHandlers
 {
     public class RegisterMessageHandler : MessageHandler
     {
-        private UserState userState;
+        private IUserState userState;
 
-        public RegisterMessageHandler(UserState userState)
+        public RegisterMessageHandler(IUserState userState)
         {
             this.userState = userState;
             Commands = new List<string>() {"/reg"};
@@ -22,7 +22,7 @@ namespace TelegramBot.MessageHandlers
                        "Теперь ты можешь воспользоваться функцией /ds";
             }
 
-            userState.SetChatStatus(chatId, UserStatus.WaitingGroupNumber);
+            userState.SetChatInfo(chatId, UserStatus.WaitingGroupNumber);
             return "Введи свой номер группы в формате \"МЕН-000000\" :)";
         }
     }
