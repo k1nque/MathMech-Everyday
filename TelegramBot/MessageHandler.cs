@@ -6,6 +6,7 @@ namespace TelegramBot
     public abstract class MessageHandler
     {
         protected List<string> Commands = new List<string>();
+        public string CommandDescription { get; set; }
 
         public abstract Task<string> GetMessage(long chatId);
 

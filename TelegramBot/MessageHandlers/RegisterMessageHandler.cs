@@ -11,6 +11,7 @@ namespace TelegramBot.MessageHandlers
         {
             this.userState = userState;
             Commands = new List<string>() {"/reg"};
+            CommandDescription = "помогу зарегистрироваться и запомню тебя";
         }
 
         public override async Task<string> GetMessage(long chatId)

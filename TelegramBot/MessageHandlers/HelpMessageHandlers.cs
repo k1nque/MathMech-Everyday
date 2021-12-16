@@ -8,12 +8,13 @@ namespace TelegramBot.MessageHandlers
         public HelpMessageHandler()
         {
             Commands = new List<string>() {"/help"};
+            CommandDescription = "расскажу какие команды я знаю";
         }
 
         public override async Task<string> GetMessage(long chatId)
         {
             return "\n/reg чтобы зарегистрироваться и быстро получать расписание" +
-                   "\n/ds или слово \"расписание\" - и я покажу тебе твоё расписание на сегодня" +
+                   "\n/ds или слово \"расписание\" - и я покажу тебе твоё расписание на сегодня " +
                    "(только для зарегистрированных пользователей)" +
                    "\n/busy покажу какие кабинеты сейчас заняты" +
                    "\nИли просто отправь номер группы в формате \"р МЕН-000000\", " +

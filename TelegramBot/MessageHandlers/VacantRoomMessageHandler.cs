@@ -14,6 +14,7 @@ namespace TelegramBot.MessageHandlers
         {
             this.vacantRoomsFinder = vacantRoomsFinder;
             Commands = new List<string>() {"/busy"};
+            CommandDescription = "покажу какие кабинеты сейчас заняты";
         }
 
         public override async Task<string> GetMessage(long chatId)

@@ -15,6 +15,7 @@ namespace TelegramBot.MessageHandlers
             this.userState = userState;
             this.scheduleMessageHandler = new ScheduleMessageHandler(scheduleCreator, groupIdFinder);
             Commands = new List<string>() {"/ds", "расписание", "р"};
+            CommandDescription = "покажу твоё расписание (только для зарегистрированных пользователей)";
         }
 
         public override bool CheckMessage(long chatId, string text)
