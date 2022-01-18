@@ -1,0 +1,24 @@
+{
+  "version": 2,
+  "dgSpecHash": "xWPoHeR7mFq4I/I+FSoiqBXzMujGLpcO6sYPFQ8WPtby4k7NuvPE9FBDMEQs6AzdTrxWNK3UvtPKklblpel0sA==",
+  "success": true,
+  "projectFilePath": "C:\\Users\\Lenovo\\Desktop\\бот перед сдачей\\MathMech-Everyday\\Parser\\Parser.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\Lenovo\\.nuget\\packages\\ical.net\\4.2.0\\ical.net.4.2.0.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\ncron\\2.3.0\\ncron.2.3.0.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\nodatime\\3.0.0\\nodatime.3.0.0.nupkg.sha512",
+    "C:\\Users\\Lenovo\\.nuget\\packages\\system.runtime.compilerservices.unsafe\\4.7.1\\system.runtime.compilerservices.unsafe.4.7.1.nupkg.sha512"
+  ],
+  "logs": [
+    {
+      "code": "NU1701",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Пакет \"NCron 2.3.0\" был восстановлен с помощью \".NETFramework,Version=v4.6.1, .NETFramework,Version=v4.6.2, .NETFramework,Version=v4.7, .NETFramework,Version=v4.7.1, .NETFramework,Version=v4.7.2, .NETFramework,Version=v4.8\", а не целевой платформы проекта \"net5.0\". Этот пакет может быть не полностью совместим с вашим проектом.",
+      "libraryId": "NCron",
+      "targetGraphs": [
+        "net5.0"
+      ]
+    }
+  ]
+}
