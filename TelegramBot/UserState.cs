@@ -10,17 +10,19 @@ namespace TelegramBot
         Registered
     };
 
-    public interface IUserState
+    public interface IUserState : IDisposable
     {
         public UserStatus? GetChatStatus(long chatId);
         public string GetChatGroupName(long chatId);
         public void SetChatInfo(long chatId, UserStatus status, string groupName = null);
         public void RemoveChat(long chatId);
+        public void Dispose();
     }
 
-    public class UserState : IUserState
+    public class UserStateSQLite : IUserState
     {
         private SQLiteConnection connection;
+        private bool disposed = false;
 
         public UserState(string chatDatabaseFilename)
         {
@@ -33,9 +35,24 @@ namespace TelegramBot
             cmd.ExecuteNonQuery();
         }
 
+        public void Dispose()
+        {
+            Dispose(true);
+            GC.SuppressFinalize(this);
+        }
+
+        protected virtual void Dispose(bool disposing)
+        {
+            if (!disposed)
+            {
+                connection.Close();
+                disposed = true;
+            }
+        }
+
         ~UserState()
         {
-            connection.Close();
+            Dispose(false);
         }
 
         public UserStatus? GetChatStatus(long chatId)
