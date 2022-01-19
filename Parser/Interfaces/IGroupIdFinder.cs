@@ -9,6 +9,6 @@ namespace Parser
         IEnumerable<string> ExtractInstituteGroupsId(
             IEnumerable<string> institutesIds);
 
-        bool IsGroupNumber(string text);
+        bool IsGroupName(string text);
     }
 }

@@ -6,15 +6,15 @@ namespace TelegramBot
     public enum UserStatus
     {
         NewChat,
-        WaitingGroupNumber,
+        WaitingGroupName,
         Registered
     };
 
     public interface IUserState
     {
         public UserStatus? GetChatStatus(long chatId);
-        public string GetChatGroupNumber(long chatId);
-        public void SetChatInfo(long chatId, UserStatus status, string groupNumber = null);
+        public string GetChatGroupName(long chatId);
+        public void SetChatInfo(long chatId, UserStatus status, string groupName = null);
         public void RemoveChat(long chatId);
     }
 
@@ -29,7 +29,7 @@ namespace TelegramBot
             var cmd = connection.CreateCommand();
             cmd.CommandText = "create table if not exists chats (" +
                               "chat_id integer primary key unique not null, " +
-                              "status integer not null, group_number text)";
+                              "status integer not null, group_name text)";
             cmd.ExecuteNonQuery();
         }
 
@@ -47,22 +47,22 @@ namespace TelegramBot
             return result is null ? null : (UserStatus) Convert.ToInt32(result);
         }
 
-        public string GetChatGroupNumber(long chatId)
+        public string GetChatGroupName(long chatId)
         {
             var cmd = connection.CreateCommand();
-            cmd.CommandText = "select group_number from chats where chat_id == @chat_id limit 1";
+            cmd.CommandText = "select group_name from chats where chat_id == @chat_id limit 1";
             cmd.Parameters.AddWithValue("@chat_id", chatId);
             return (string) cmd.ExecuteScalar();
         }
 
-        public void SetChatInfo(long chatId, UserStatus status, string groupNumber = null)
+        public void SetChatInfo(long chatId, UserStatus status, string groupName = null)
         {
             var cmd = connection.CreateCommand();
-            cmd.CommandText = "insert or replace into chats(chat_id, status, group_number) " +
-                              "values (@chat_id, @status, @group_number)";
+            cmd.CommandText = "insert or replace into chats(chat_id, status, group_name) " +
+                              "values (@chat_id, @status, @group_name)";
             cmd.Parameters.AddWithValue("@chat_id", chatId);
             cmd.Parameters.AddWithValue("@status", status);
-            cmd.Parameters.AddWithValue("@group_number", groupNumber);
+            cmd.Parameters.AddWithValue("@group_name", groupName);
             cmd.ExecuteNonQuery();
         }
 

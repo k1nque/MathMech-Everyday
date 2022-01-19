@@ -28,11 +28,11 @@ namespace TelegramBot.MessageHandlers
         {
             if (userState.GetChatStatus(chatId) == UserStatus.Registered)
             {
-                scheduleMessageHandler.GroupName = userState.GetChatGroupNumber(chatId);
+                scheduleMessageHandler.GroupName = userState.GetChatGroupName(chatId);
                 return await scheduleMessageHandler.GetMessage(chatId);
             }
 
-            userState.SetChatInfo(chatId, UserStatus.WaitingGroupNumber);
+            userState.SetChatInfo(chatId, UserStatus.WaitingGroupName);
             return "Ты пока не зарегистрирован. " +
                    "Введи номер своей группы в формате \"МЕН-000000\"" +
                    " чтобы зарегистрироваться и узнать расписание";

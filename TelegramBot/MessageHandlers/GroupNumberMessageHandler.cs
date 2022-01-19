@@ -3,13 +3,13 @@ using Parser;
 
 namespace TelegramBot.MessageHandlers
 {
-    public class GroupNumberMessageHandler : MessageHandler
+    public class GroupNameMessageHandler : MessageHandler
     {
         private IUserState userState;
         private IGroupIdFinder groupIdFinder;
-        private string groupNumber;
+        private string groupName;
 
-        public GroupNumberMessageHandler(IUserState userState, IGroupIdFinder groupIdFinder)
+        public GroupNameMessageHandler(IUserState userState, IGroupIdFinder groupIdFinder)
         {
             this.userState = userState;
             this.groupIdFinder = groupIdFinder;
@@ -17,15 +17,15 @@ namespace TelegramBot.MessageHandlers
 
         public override bool CheckMessage(long chatId, string text)
         {
-            var result = userState.GetChatStatus(chatId) == UserStatus.WaitingGroupNumber 
-                         && groupIdFinder.IsGroupNumber(text);
-            if (result) groupNumber = text;
+            var result = userState.GetChatStatus(chatId) == UserStatus.WaitingGroupName
+                         && groupIdFinder.IsGroupName(text);
+            if (result) groupName = text;
             return result;
         }
 
         public override async Task<string> GetMessage(long chatId)
         {
-            userState.SetChatInfo(chatId, UserStatus.Registered, groupNumber);
+            userState.SetChatInfo(chatId, UserStatus.Registered, groupName);
             return "Прекрасно, теперь ты можешь получать расписание своей группы просто" +
                    "написав слово \"расписание\" или вызвать команду /ds";
         }

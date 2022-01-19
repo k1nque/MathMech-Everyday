@@ -45,7 +45,7 @@ namespace TelegramBot
                 new RegisterMessageHandler(userState),
                 new ScheduleMessageHandler(scheduleCreator, groupIdFinder),
                 new RegisteredScheduleMessageHandler(userState, scheduleCreator, groupIdFinder),
-                new GroupNumberMessageHandler(userState, groupIdFinder),
+                new GroupNameMessageHandler(userState, groupIdFinder),
                 new VacantRoomMessageHandler(vacantRoomsFinder),
                 new OtherMessageHandler()
             };

@@ -22,7 +22,7 @@ namespace TelegramBot.MessageHandlers
         {
             var tokens = text.Split();
             var result = tokens.Length == 2 && Commands.Contains(tokens[0].ToLower())
-                                            && groupIdFinder.IsGroupNumber(tokens[1]);
+                                            && groupIdFinder.IsGroupName(tokens[1]);
             if (result) GroupName = tokens[1];
             return result;
         }

@@ -22,7 +22,7 @@ namespace TelegramBot.MessageHandlers
                        "Теперь ты можешь воспользоваться функцией /ds";
             }
 
-            userState.SetChatInfo(chatId, UserStatus.WaitingGroupNumber);
+            userState.SetChatInfo(chatId, UserStatus.WaitingGroupName);
             return "Введи свой номер группы в формате \"МЕН-000000\" :)";
         }
     }

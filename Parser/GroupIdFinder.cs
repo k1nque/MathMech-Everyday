@@ -11,7 +11,7 @@ namespace Parser
         private GroupsDataParser parser = new();
         private HashSet<string> MathMechGroups { get; }
 
-        public bool IsGroupNumber(string text)
+        public bool IsGroupName(string text)
         {
             return MathMechGroups.Contains(text);
         }
