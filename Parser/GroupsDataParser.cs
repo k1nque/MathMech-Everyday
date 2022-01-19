@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Net;
 using System.Text.Json;
@@ -13,6 +14,7 @@ namespace Parser
     {
         private const string Url = "https://urfu.ru/api/schedule/groups/";
         public string GroupsFilename { get; set; }
+        private int retries = 15;
 
         [JsonPropertyName("external_id")] public int ExternalId { get; set; }
 
@@ -30,15 +32,27 @@ namespace Parser
 
         public string GetJson(string instituteId = default)
         {
-            var result = new WebClient().DownloadString(Url + instituteId);
-
-            // fix for empty answers
-            if (result.Length <= 4)
+            using var client = new WebClient();
+            string result;
+            try
             {
-                return File.ReadAllText(GroupsFilename);
+                result = client.DownloadString(Url + instituteId);
+
+                // fix for empty answers
+                if (result.Length <= 4)
+                    result = File.ReadAllText(GroupsFilename);
+
+                File.WriteAllText(GroupsFilename, result);
+                return result;
+            }
+            catch (WebException)
+            {
+                result = retries > 0 
+                    ? GetJson(instituteId) 
+                    : File.ReadAllText(GroupsFilename);
+                retries -= 1;
             }
 
-            File.WriteAllText(GroupsFilename, result);
             return result;
         }
 
