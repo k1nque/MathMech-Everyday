@@ -17,11 +17,11 @@ namespace TelegramBot
     public class Bot
     {
         private TelegramBotClient botClient;
-        private IUserState userState;
-        private IGroupIdFinder groupIdFinder;
-        private IScheduleCreator scheduleCreator;
-        private IVacantRoomsFinder vacantRoomsFinder;
-        private List<IMessageHandler> listOfPossibleMessageHandlers;
+        private readonly IUserState userState;
+        private readonly IGroupIdFinder groupIdFinder;
+        private readonly IScheduleCreator scheduleCreator;
+        private readonly IVacantRoomsFinder vacantRoomsFinder;
+        private readonly List<MessageHandler> listOfPossibleMessageHandlers;
 
         public class Configuration
         {
@@ -38,7 +38,7 @@ namespace TelegramBot
             groupIdFinder = new GroupIdFinder(config.AllGroupsFilename, config.MathMechGroupsFilename);
             scheduleCreator = new ScheduleCreator(groupIdFinder);
             vacantRoomsFinder = new VacantRoomsFinder(scheduleCreator, groupIdFinder);
-            listOfPossibleMessageHandlers = new List<IMessageHandler>()
+            listOfPossibleMessageHandlers = new List<MessageHandler>()
             {
                 new StartMessageHandler(userState),
                 new HelpMessageHandler(),
@@ -49,6 +49,17 @@ namespace TelegramBot
                 new VacantRoomMessageHandler(vacantRoomsFinder),
                 new OtherMessageHandler()
             };
+        }
+
+        public Bot(IUserState userState,
+            IGroupIdFinder groupIdFinder,
+            IScheduleCreator scheduleCreator,
+            IVacantRoomsFinder vacantRoomsFinder)
+        {
+            this.userState = userState;
+            this.groupIdFinder = groupIdFinder;
+            this.scheduleCreator = scheduleCreator;
+            this.vacantRoomsFinder = vacantRoomsFinder;
         }
 
         private Task HandleErrorAsync(ITelegramBotClient client, Exception exception,
@@ -81,12 +92,12 @@ namespace TelegramBot
             }
 
             foreach (var messageHandler in listOfPossibleMessageHandlers.Where(
-                         messageHandler => messageHandler.CheckRequestMessage(chatId, text)))
+                         messageHandler => messageHandler.CheckMessage(chatId, text)))
             {
-                var answer = await messageHandler.GetAnswerMessage(chatId);
+                var answer = await messageHandler.GetMessage(chatId);
                 await botClient.SendTextMessageAsync(chatId, answer, cancellationToken: cancellationToken);
                 break;
-            }
+            }   
         }
 
         public void Start()
