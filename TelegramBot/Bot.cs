@@ -16,50 +16,28 @@ namespace TelegramBot
 {
     public class Bot
     {
-        private TelegramBotClient botClient;
+        private ITelegramBotClient botClient;
         private readonly IUserState userState;
         private readonly IGroupIdFinder groupIdFinder;
         private readonly IScheduleCreator scheduleCreator;
         private readonly IVacantRoomsFinder vacantRoomsFinder;
-        private readonly List<MessageHandler> listOfPossibleMessageHandlers;
-
-        public class Configuration
-        {
-            public string BotToken { get; set; }
-            public string AllGroupsFilename { get; set; }
-            public string MathMechGroupsFilename { get; set; }
-            public string ChatDatabaseFilename { get; set; }
-        }
-
-        public Bot(Configuration config)
-        {
-            botClient = new TelegramBotClient(config.BotToken);
-            userState = new UserStateSQLite(config.ChatDatabaseFilename);
-            groupIdFinder = new GroupIdFinder(config.AllGroupsFilename, config.MathMechGroupsFilename);
-            scheduleCreator = new ScheduleCreator(groupIdFinder);
-            vacantRoomsFinder = new VacantRoomsFinder(scheduleCreator, groupIdFinder);
-            listOfPossibleMessageHandlers = new List<MessageHandler>()
-            {
-                new StartMessageHandler(userState),
-                new HelpMessageHandler(),
-                new RegisterMessageHandler(userState),
-                new ScheduleMessageHandler(scheduleCreator, groupIdFinder),
-                new RegisteredScheduleMessageHandler(userState, scheduleCreator, groupIdFinder),
-                new GroupNameMessageHandler(userState, groupIdFinder),
-                new VacantRoomMessageHandler(vacantRoomsFinder),
-                new OtherMessageHandler()
-            };
-        }
-
-        public Bot(IUserState userState,
+        private readonly IEnumerable<IMessageHandler> listOfPossibleMessageHandlers;
+        
+        public Bot(
+            //ITelegramBotClient botClient,
+            IUserState userState,
             IGroupIdFinder groupIdFinder,
             IScheduleCreator scheduleCreator,
-            IVacantRoomsFinder vacantRoomsFinder)
+            IVacantRoomsFinder vacantRoomsFinder,
+            IEnumerable<IMessageHandler> listOfPossibleMessageHandlers)
         {
+            this.botClient = botClient;
+            this.botClient = new TelegramBotClient("5074072293:AAFO0K4012TZb6A9rIEuDHe87gXUDDS1UGQ");
             this.userState = userState;
             this.groupIdFinder = groupIdFinder;
             this.scheduleCreator = scheduleCreator;
             this.vacantRoomsFinder = vacantRoomsFinder;
+            this.listOfPossibleMessageHandlers = listOfPossibleMessageHandlers;
         }
 
         private Task HandleErrorAsync(ITelegramBotClient client, Exception exception,
@@ -90,11 +68,10 @@ namespace TelegramBot
             {
                 userState.SetChatInfo(chatId, UserStatus.NewChat);
             }
-
             foreach (var messageHandler in listOfPossibleMessageHandlers.Where(
-                         messageHandler => messageHandler.CheckMessage(chatId, text)))
+                         messageHandler => messageHandler.CheckRequestMessage(chatId, text)))
             {
-                var answer = await messageHandler.GetMessage(chatId);
+                var answer = await messageHandler.GetAnswerMessage(chatId);
                 await botClient.SendTextMessageAsync(chatId, answer, cancellationToken: cancellationToken);
                 break;
             }   

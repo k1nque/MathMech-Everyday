@@ -43,7 +43,7 @@ namespace Parser
             var groupsIds = groupIdFinder.ExtractInstituteGroupsId(instituteIds);
             var groupsSchedule = await GetGroupsDaySchedules(groupsIds, timeToFind);
             var lessons = GetLessonsAtTime(groupsSchedule, timeToFind);
-            return GetLessonsRooms(lessons);
+            return GetLessonsRooms(lessons).Where(name => name != "Teams Microsoft");
         }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlTypes;
 using System.Diagnostics.Contracts;
 using System.IO;
 using System.Linq;
@@ -11,6 +12,7 @@ using Parser.ScheduleTasks;
 using TelegramBot;
 using Ninject;
 using Parser;
+using Telegram.Bot;
 using TelegramBot.MessageHandlers;
 
 
@@ -40,26 +42,17 @@ namespace MathMech_Everyday
             }
 
             var container = new StandardKernel();
-            var botConfig = new Bot.Configuration();
-            botConfig.BotToken = botToken;
-            botConfig.AllGroupsFilename = Config.AllGroupsFilename;
-            botConfig.MathMechGroupsFilename = Config.MathMechGroupsFilename;
-            botConfig.ChatDatabaseFilename = Config.ChatDatabaseFilename;
-            container.Bind<IUserState>().To<UserStateSQLite>();
-            container.Bind<IGroupIdFinder>().To<GroupIdFinder>();
+            container.Bind<IUserState>().ToConstructor(
+                x => new UserStateSQLite(Config.ChatDatabaseFilename))
+                .InSingletonScope();
+            container.Bind<IGroupIdFinder>().ToConstructor(
+                x => new GroupIdFinder(
+                    Config.AllGroupsFilename, Config.MathMechGroupsFilename)).InSingletonScope();
+            // container.Bind<ITelegramBotClient>().ToConstructor(
+            //     x => new TelegramBotClient(botToken, default, default));
             container.Bind<IScheduleCreator>().To<ScheduleCreator>();
             container.Bind<IVacantRoomsFinder>().To<VacantRoomsFinder>();
-
-            // bind msg handler
-            /*var type = typeof(MessageHandler);
-            var types = AppDomain.CurrentDomain.GetAssemblies()
-                .SelectMany(s => s.GetTypes())
-                .Where(p => type.IsAssignableFrom(p));
-            foreach (var t in types)
-            {
-                container.Bind<IMessageHandler>().To<>
-            }*/
-
+            
             container.Bind<IMessageHandler>().To<StartMessageHandler>();
             container.Bind<IMessageHandler>().To<HelpMessageHandler>();
             container.Bind<IMessageHandler>().To<RegisterMessageHandler>();
@@ -69,10 +62,10 @@ namespace MathMech_Everyday
             container.Bind<IMessageHandler>().To<VacantRoomMessageHandler>();
             container.Bind<IMessageHandler>().To<OtherMessageHandler>();
 
-            container.Bind<Bot.Configuration>()
-                .ToConstant(botConfig)
-                .WhenInjectedInto<Bot>();
-
+            container.Bind<IEnumerable<IMessageHandler>>().ToConstructor(
+                x => new List<IMessageHandler> (
+                    container.GetAll<IMessageHandler>()));
+            
             container.Bind<Bot>()
                 .ToSelf()
                 .OnActivation(b => b.Start());
