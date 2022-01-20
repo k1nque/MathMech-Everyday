@@ -12,7 +12,7 @@ namespace Parser
     {
         private int retries = 15;
         private readonly string pathToEmptyCal =
-            Path.GetFullPath("../../../../Parser/empty.ics");
+            Path.GetFullPath("empty.ics");
         
         public async Task<byte[]> DownloadFile(string url)
         {

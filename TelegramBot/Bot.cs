@@ -20,7 +20,7 @@ namespace TelegramBot
         private IUserState userState;
         private IGroupIdFinder groupIdFinder;
         private IScheduleCreator scheduleCreator;
-        private VacantRoomsFinder vacantRoomsFinder;
+        private IVacantRoomsFinder vacantRoomsFinder;
         private List<MessageHandler> listOfPossibleMessageHandlers;
 
         public class Configuration

@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace Parser
 {
-    public interface IVacantRoomFinder
+    public interface IVacantRoomsFinder
     {
         Task<IEnumerable<string>> FindVacant(DateTime timeToFind);
     }

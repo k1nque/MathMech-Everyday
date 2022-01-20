@@ -8,9 +8,9 @@ namespace TelegramBot.MessageHandlers
 {
     public class VacantRoomMessageHandler : MessageHandler
     {
-        private VacantRoomsFinder vacantRoomsFinder;
+        private IVacantRoomsFinder vacantRoomsFinder;
 
-        public VacantRoomMessageHandler(VacantRoomsFinder vacantRoomsFinder)
+        public VacantRoomMessageHandler(IVacantRoomsFinder vacantRoomsFinder)
         {
             this.vacantRoomsFinder = vacantRoomsFinder;
             Commands = new List<string>() {"/busy"};
