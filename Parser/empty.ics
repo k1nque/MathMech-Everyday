@@ -1,0 +1,8 @@
+BEGIN:VCALENDAR
+VERSION:2.0
+PRODID:-//Ural federal university//urfu.ru//RU
+UID:39adacc818ecb7beb045017026330ec4
+X-WR-CALNAME;VALUE=TEXT:Расписание занятий, группа МЕН-200801
+X-WR-CALDESC:Уральский федеральный университет
+X-WR-TIMEZONE:Asia/Yekaterinburg
+END:VCALENDAR

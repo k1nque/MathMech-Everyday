@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace Parser
 {
-    public class VacantRoomsFinder
+    public class VacantRoomsFinder: IVacantRoomFinder
     {
         private readonly IScheduleCreator scheduleCreator;
         private readonly IGroupIdFinder groupIdFinder;

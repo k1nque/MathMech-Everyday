@@ -8,7 +8,7 @@ namespace Parser
 {
     public class GroupIdFinder : IGroupIdFinder
     {
-        private GroupsDataParser parser = new();
+        private readonly GroupsDataParser parser = new();
         private HashSet<string> MathMechGroups { get; }
 
         public bool IsGroupName(string text)
@@ -41,10 +41,9 @@ namespace Parser
             return properties.First().Id.ToString();
         }
 
-        private IEnumerable<GroupsDataParser> SelectMathMechGroups(IEnumerable<GroupsDataParser> properties)
-        {
-            return properties.Where(p => MathMechGroups.Contains(p.Title));
-        }
+        private IEnumerable<GroupsDataParser> SelectMathMechGroups(IEnumerable<GroupsDataParser> properties) =>
+            properties
+                .Where(p => MathMechGroups.Contains(p.Title));
 
         public IEnumerable<string> ExtractInstituteGroupsId(IEnumerable<string> institutesIds)
         {
