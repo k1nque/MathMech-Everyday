@@ -24,7 +24,7 @@ namespace TelegramBot
         private SQLiteConnection connection;
         private bool disposed = false;
 
-        public UserState(string chatDatabaseFilename)
+        public UserStateSQLite(string chatDatabaseFilename)
         {
             connection = new SQLiteConnection($"Data Source={chatDatabaseFilename}");
             connection.Open();
@@ -50,7 +50,7 @@ namespace TelegramBot
             }
         }
 
-        ~UserState()
+        ~UserStateSQLite()
         {
             Dispose(false);
         }

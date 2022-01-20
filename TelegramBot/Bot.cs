@@ -34,7 +34,7 @@ namespace TelegramBot
         public Bot(Configuration config)
         {
             botClient = new TelegramBotClient(config.BotToken);
-            userState = new UserState(config.ChatDatabaseFilename);
+            userState = new UserStateSQLite(config.ChatDatabaseFilename);
             groupIdFinder = new GroupIdFinder(config.AllGroupsFilename, config.MathMechGroupsFilename);
             scheduleCreator = new ScheduleCreator(groupIdFinder);
             vacantRoomsFinder = new VacantRoomsFinder(scheduleCreator, groupIdFinder);
