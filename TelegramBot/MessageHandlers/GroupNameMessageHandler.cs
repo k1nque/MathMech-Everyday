@@ -3,7 +3,7 @@ using Parser;
 
 namespace TelegramBot.MessageHandlers
 {
-    public class GroupNameMessageHandler : MessageHandler
+    public class GroupNameMessageHandler : IMessageHandler
     {
         private IUserState userState;
         private IGroupIdFinder groupIdFinder;
@@ -15,7 +15,7 @@ namespace TelegramBot.MessageHandlers
             this.groupIdFinder = groupIdFinder;
         }
 
-        public override bool CheckMessage(long chatId, string text)
+        public bool CheckRequestMessage(long chatId, string text)
         {
             var result = userState.GetChatStatus(chatId) == UserStatus.WaitingGroupName
                          && groupIdFinder.IsGroupName(text);
@@ -23,7 +23,7 @@ namespace TelegramBot.MessageHandlers
             return result;
         }
 
-        public override async Task<string> GetMessage(long chatId)
+        public async Task<string> GetAnswerMessage(long chatId)
         {
             userState.SetChatInfo(chatId, UserStatus.Registered, groupName);
             return "Прекрасно, теперь ты можешь получать расписание своей группы просто" +

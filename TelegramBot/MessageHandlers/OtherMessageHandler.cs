@@ -2,18 +2,18 @@ using System.Threading.Tasks;
 
 namespace TelegramBot.MessageHandlers
 {
-    public class OtherMessageHandler : MessageHandler
+    public class OtherMessageHandler : IMessageHandler
     {
         public OtherMessageHandler()
         {
         }
 
-        public override bool CheckMessage(long chatId, string text)
+        public bool CheckRequestMessage(long chatId, string text)
         {
             return true;
         }
 
-        public override async Task<string> GetMessage(long chatId)
+        public async Task<string> GetAnswerMessage(long chatId)
         {
             return "Я пока не знаю такой команды, проверь правильно ли введены данные";
         }

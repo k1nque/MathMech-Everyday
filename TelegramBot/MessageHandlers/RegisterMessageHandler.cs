@@ -3,18 +3,22 @@ using System.Threading.Tasks;
 
 namespace TelegramBot.MessageHandlers
 {
-    public class RegisterMessageHandler : MessageHandler
+    public class RegisterMessageHandler : IMessageHandler
     {
         private IUserState userState;
 
         public RegisterMessageHandler(IUserState userState)
         {
             this.userState = userState;
-            Commands = new List<string>() {"/reg"};
-            CommandDescription = "помогу зарегистрироваться и запомню тебя";
+            // CommandDescription = "помогу зарегистрироваться и запомню тебя";
         }
 
-        public override async Task<string> GetMessage(long chatId)
+        public bool CheckRequestMessage(long chatId, string text)
+        {
+            return (new List<string>() {"/reg"}).Contains(text.ToLower().Split()[0]);
+        }
+
+        public async Task<string> GetAnswerMessage(long chatId)
         {
             if (userState.GetChatStatus(chatId) == UserStatus.Registered)
             {

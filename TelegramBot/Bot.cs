@@ -21,7 +21,7 @@ namespace TelegramBot
         private IGroupIdFinder groupIdFinder;
         private IScheduleCreator scheduleCreator;
         private IVacantRoomsFinder vacantRoomsFinder;
-        private List<MessageHandler> listOfPossibleMessageHandlers;
+        private List<IMessageHandler> listOfPossibleMessageHandlers;
 
         public class Configuration
         {
@@ -38,7 +38,7 @@ namespace TelegramBot
             groupIdFinder = new GroupIdFinder(config.AllGroupsFilename, config.MathMechGroupsFilename);
             scheduleCreator = new ScheduleCreator(groupIdFinder);
             vacantRoomsFinder = new VacantRoomsFinder(scheduleCreator, groupIdFinder);
-            listOfPossibleMessageHandlers = new List<MessageHandler>()
+            listOfPossibleMessageHandlers = new List<IMessageHandler>()
             {
                 new StartMessageHandler(userState),
                 new HelpMessageHandler(),
@@ -81,9 +81,9 @@ namespace TelegramBot
             }
 
             foreach (var messageHandler in listOfPossibleMessageHandlers.Where(
-                         messageHandler => messageHandler.CheckMessage(chatId, text)))
+                         messageHandler => messageHandler.CheckRequestMessage(chatId, text)))
             {
-                var answer = await messageHandler.GetMessage(chatId);
+                var answer = await messageHandler.GetAnswerMessage(chatId);
                 await botClient.SendTextMessageAsync(chatId, answer, cancellationToken: cancellationToken);
                 break;
             }

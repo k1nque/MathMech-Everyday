@@ -6,18 +6,22 @@ using Parser;
 
 namespace TelegramBot.MessageHandlers
 {
-    public class VacantRoomMessageHandler : MessageHandler
+    public class VacantRoomMessageHandler : IMessageHandler
     {
         private IVacantRoomsFinder vacantRoomsFinder;
 
         public VacantRoomMessageHandler(IVacantRoomsFinder vacantRoomsFinder)
         {
             this.vacantRoomsFinder = vacantRoomsFinder;
-            Commands = new List<string>() {"/busy"};
-            CommandDescription = "покажу какие кабинеты сейчас заняты";
+            // CommandDescription = "покажу какие кабинеты сейчас заняты";
         }
 
-        public override async Task<string> GetMessage(long chatId)
+        public bool CheckRequestMessage(long chatId, string text)
+        {
+            return (new List<string>() {"/busy"}).Contains(text.ToLower().Split()[0]);
+        }
+        
+        public async Task<string> GetAnswerMessage(long chatId)
         {
             var rooms = (await vacantRoomsFinder.FindVacant(DateTime.Now)).ToList();
             return rooms.Count > 0 ? $"Занятые аудитории: {string.Join(", ", rooms)}" : "Все аудитории свободны";

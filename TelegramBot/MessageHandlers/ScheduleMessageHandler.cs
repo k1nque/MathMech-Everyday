@@ -5,7 +5,7 @@ using Parser;
 
 namespace TelegramBot.MessageHandlers
 {
-    public class ScheduleMessageHandler : MessageHandler
+    public class ScheduleMessageHandler : IMessageHandler
     {
         private IScheduleCreator scheduleCreator;
         private IGroupIdFinder groupIdFinder;
@@ -15,19 +15,19 @@ namespace TelegramBot.MessageHandlers
         {
             this.scheduleCreator = scheduleCreator;
             this.groupIdFinder = groupIdFinder;
-            Commands = new List<string>() {"расписание", "р"};
         }
 
-        public override bool CheckMessage(long chatId, string text)
+        public bool CheckRequestMessage(long chatId, string text)
         {
             var tokens = text.Split();
-            var result = tokens.Length == 2 && Commands.Contains(tokens[0].ToLower())
-                                            && groupIdFinder.IsGroupName(tokens[1]);
+            var result = tokens.Length == 2 && 
+                         (new List<string>() {"расписание", "р"}).Contains(tokens[0].ToLower()) 
+                         && groupIdFinder.IsGroupName(tokens[1]);
             if (result) GroupName = tokens[1];
             return result;
         }
 
-        public override async Task<string> GetMessage(long chatId)
+        public async Task<string> GetAnswerMessage(long chatId)
         {
             var schedule = await scheduleCreator.CreateScheduleByName(GroupName, DateTime.Now);
             return $"Держи расписание, мне не жалко\n{schedule.ToString()}";

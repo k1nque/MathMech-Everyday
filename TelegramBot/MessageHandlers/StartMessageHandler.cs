@@ -3,17 +3,21 @@ using System.Threading.Tasks;
 
 namespace TelegramBot.MessageHandlers
 {
-    public class StartMessageHandler : MessageHandler
+    public class StartMessageHandler : IMessageHandler
     {
         private IUserState userState;
         
         public StartMessageHandler(IUserState userState)
         {
             this.userState = userState;
-            Commands = new List<string>() {"/start"};
+        }
+        
+        public bool CheckRequestMessage(long chatId, string text)
+        {
+            return (new List<string>() {"/start"}).Contains(text.ToLower().Split()[0]);
         }
 
-        public override async Task<string> GetMessage(long chatId)
+        public async Task<string> GetAnswerMessage(long chatId)
         {
             userState.SetChatInfo(chatId, UserStatus.NewChat);
             return "Привет! Я пока могу делать следующие действия:" +

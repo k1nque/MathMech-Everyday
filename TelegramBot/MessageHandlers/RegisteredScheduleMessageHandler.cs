@@ -4,7 +4,7 @@ using Parser;
 
 namespace TelegramBot.MessageHandlers
 {
-    public class RegisteredScheduleMessageHandler : MessageHandler
+    public class RegisteredScheduleMessageHandler : IMessageHandler
     {
         private IUserState userState;
         private ScheduleMessageHandler scheduleMessageHandler;
@@ -14,22 +14,21 @@ namespace TelegramBot.MessageHandlers
         {
             this.userState = userState;
             this.scheduleMessageHandler = new ScheduleMessageHandler(scheduleCreator, groupIdFinder);
-            Commands = new List<string>() {"/ds", "расписание", "р"};
-            CommandDescription = "покажу твоё расписание (только для зарегистрированных пользователей)";
+            // CommandDescription = "покажу твоё расписание (только для зарегистрированных пользователей)";
         }
 
-        public override bool CheckMessage(long chatId, string text)
+        public bool CheckRequestMessage(long chatId, string text)
         {
             var tokens = text.Split();
-            return tokens.Length == 1 && Commands.Contains(tokens[0].ToLower());
+            return tokens.Length == 1 && (new List<string>() {"/ds", "расписание", "р"}).Contains(tokens[0].ToLower());
         }
 
-        public override async Task<string> GetMessage(long chatId)
+        public async Task<string> GetAnswerMessage(long chatId)
         {
             if (userState.GetChatStatus(chatId) == UserStatus.Registered)
             {
                 scheduleMessageHandler.GroupName = userState.GetChatGroupName(chatId);
-                return await scheduleMessageHandler.GetMessage(chatId);
+                return await scheduleMessageHandler.GetAnswerMessage(chatId);
             }
 
             userState.SetChatInfo(chatId, UserStatus.WaitingGroupName);

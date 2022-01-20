@@ -3,15 +3,19 @@ using System.Threading.Tasks;
 
 namespace TelegramBot.MessageHandlers
 {
-    public class HelpMessageHandler : MessageHandler
+    public class HelpMessageHandler : IMessageHandler
     {
         public HelpMessageHandler()
         {
-            Commands = new List<string>() {"/help"};
-            CommandDescription = "расскажу какие команды я знаю";
+            // CommandDescription = "расскажу какие команды я знаю";
         }
 
-        public override async Task<string> GetMessage(long chatId)
+        public bool CheckRequestMessage(long chatId, string text)
+        {
+            return (new List<string>() {"/help"}).Contains(text.ToLower().Split()[0]);
+        }
+
+        public async Task<string> GetAnswerMessage(long chatId)
         {
             return "\n/reg чтобы зарегистрироваться и быстро получать расписание" +
                    "\n/ds или слово \"расписание\" - и я покажу тебе твоё расписание на сегодня " +
